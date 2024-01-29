@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { CiEdit } from "react-icons/ci";
 import { GrPowerReset } from "react-icons/gr";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
@@ -10,15 +9,19 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
 import Table from "@mui/material/Table";
-// import PopupComponent from "../PopupModel";
-
+import EditUser from "../EditUser";
 function TableComponent({
   filterIsVerified,
   filterIsAllow,
   handleUserVerificationChange,
+  handleStatusChange,
+  handleAllowAppChange,
 }) {
   const [responseData, setResponseData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [userVerificationChange, setUserVerificationChange] = useState(null);
+  const [statusChange, setStatusChange] = useState(null);
+  const [allowAppChange, setAllowAppChange] = useState(null);
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -57,43 +60,7 @@ function TableComponent({
     };
 
     fetchData();
-  }, []);
-
-  // const handleUserVerificationChange = (user) => {
-  //   setResponseData((prevData) => {
-  //     const updatedValues = prevData.Values.map((u) =>
-  //       u.MemID === user.MemID
-  //         ? { ...u, IsVerified: u.IsVerified === "Y" ? "N" : "Y" }
-  //         : u
-  //     );
-  //     return {
-  //       ...prevData,
-  //       Values: updatedValues,
-  //     };
-  //   });
-  // };
-
-  const handleStatusChange = (user) => {
-    setResponseData((prevData) => {
-      const updatedValues = prevData.Values.map((u) =>
-        u.MemID === user.MemID
-          ? { ...u, IsActive: user.IsActive === "A" ? "N" : "A" }
-          : u
-      );
-      return { ...prevData, Values: updatedValues };
-    });
-  };
-
-  const handleAllowAppChange = (user) => {
-    setResponseData((prevData) => {
-      const updatedValues = prevData.Values.map((u) =>
-        u.MemID === user.MemID
-          ? { ...u, IsAllow: u.IsAllow === "Y" ? "N" : "Y" }
-          : u
-      );
-      return { ...prevData, Values: updatedValues };
-    });
-  };
+  }, [userVerificationChange, statusChange, allowAppChange]);
 
   const handlePageChange = (e, value) => {
     setCurrentPage(value);
@@ -155,7 +122,10 @@ function TableComponent({
                       <TableCell align="center">{user.DefHouseNum}</TableCell>
                       <TableCell align="center">
                         <button
-                          onClick={() => handleUserVerificationChange(user)}
+                          onClick={() => {
+                            handleUserVerificationChange(user);
+                            setUserVerificationChange(user);
+                          }}
                           className="bg-green-700 text-white p-2 rounded-xl"
                         >
                           {user.IsVerified === "Y"
@@ -165,7 +135,10 @@ function TableComponent({
                       </TableCell>
                       <TableCell align="center">
                         <button
-                          onClick={() => handleAllowAppChange(user)}
+                          onClick={() => {
+                            handleAllowAppChange(user);
+                            setAllowAppChange(user);
+                          }}
                           className="bg-green-700 text-white p-2 rounded-xl"
                         >
                           {user.IsAllow === "Y" ? "Allow" : "Not Allowed"}
@@ -173,19 +146,18 @@ function TableComponent({
                       </TableCell>
                       <TableCell align="center">
                         <button
-                          onClick={() => handleStatusChange(user)}
+                          onClick={() => {
+                            handleStatusChange(user);
+                            setStatusChange(user);
+                          }}
                           className="bg-green-700 text-white p-2 rounded-xl"
                         >
                           {user.IsActive === "A" ? "Active" : "Not Active"}
                         </button>
                       </TableCell>
-                      <TableCell align="center">
-                        <button
-                          type="button"
-                          className="bg-blue-500 p-1 rounded-lg text-white text-lg mx-2"
-                        >
-                          <CiEdit />
-                        </button>
+                      <TableCell>
+                        <EditUser />
+
                         <button
                           type="button"
                           className="bg-blue-500 p-1 rounded-lg text-white text-lg mx-2 "
