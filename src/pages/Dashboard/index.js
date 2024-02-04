@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import TableComponent from "../../components/Table";
 import PopupComponent from "../../components/PopupModel";
 import toast, { Toaster } from "react-hot-toast";
+import AuthContext from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-function DashboardComponent() {
+function Dashboard() {
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [filterIsVerified, setFilterIsVerified] = useState("-1");
   const [filterIsAllow, setFilterIsAllow] = useState("-1");
-
   const handleIsVerifiedChange = (value) => {
     setFilterIsVerified(value);
   };
@@ -135,15 +139,27 @@ function DashboardComponent() {
       });
   }
 
+  const logoutHandler = (e) => {
+    localStorage.clear();
+    sessionStorage.clear();
+    logout();
+    navigate("/");
+  };
+
   return (
-    <div className="container mx-auto p-4 sm:p-6 md:p-8 lg:p-10">
+    <div className="container w-8/12 mx-auto p-2 sm:p-4 md:p-6 lg:p-8">
       <Toaster />
-      <div className="mx-12">
+      <div>
+        <button onClick={logoutHandler}>Logout</button>
+      </div>
+      <div className=" ">
         <PopupComponent />
       </div>
-      <div className="flex flex-col sm:flex-row gap-3 my-5 mx-12">
-        <div className="sm:w-1/2">
-          <span className="mr-6 font-semibold text-lg">Filter Changes: </span>
+
+      <div className="flex flex-col sm:flex-row my-5  gap-2">
+        <span className=" font-semibold text-lg">Filter Changes:</span>
+
+        <div>
           <label htmlFor="verifiedDropdown">User Verification: </label>
           <select
             id="verifiedDropdown"
@@ -157,7 +173,7 @@ function DashboardComponent() {
             <option value="N">Not Verified</option>
           </select>
         </div>
-        <div className="sm:w-1/2">
+        <div>
           <label htmlFor="allowDropdown">Allow App: </label>
           <select
             id="allowDropdown"
@@ -183,4 +199,4 @@ function DashboardComponent() {
   );
 }
 
-export default DashboardComponent;
+export default Dashboard;

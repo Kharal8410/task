@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { RiEdit2Fill } from "react-icons/ri";
+import { RxCross2 } from "react-icons/rx";
 import { useParams } from "react-router-dom";
 
-function EditUser() {
+function EditUser(user) {
   const { MemId } = useParams();
   const [isOpen, setIsOpen] = useState(false);
+
   const [userData, setUserData] = useState({
-    UserID: "",
     UserName: "",
     FirstName: "",
     MiddleName: "",
     LastName: "",
-    UserType: "",
     Password: "",
     UserImage: "",
     Email: "",
@@ -20,10 +20,7 @@ function EditUser() {
     Address: "",
     District: "",
     DefHouseNum: "",
-    IsAllow: "",
-    IsVerified: "",
-    BranchID: "",
-    FiscalID: "",
+    MemId: "",
   });
 
   useEffect(() => {
@@ -69,6 +66,28 @@ function EditUser() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    try {
+      const url = `https://testing.esnep.com/happyhomes/api/admin/user/`;
+      const signature = "p0m76";
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          signature: signature,
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      console.log("User data updated successfully!");
+    } catch (error) {
+      console.error("Error updating user data:", error.message);
+    }
+  };
 
   const handleInputChange = (event) => {
     const { id, value } = event.target;
@@ -99,10 +118,11 @@ function EditUser() {
               <div className="bg-blue-500 col-span-3 mb-4 flex justify-between p-4">
                 <h3 className="text-3xl font-bold text-white ">Add Owner</h3>
                 <button
+                  type="button"
+                  className="text-2xl font-bold text-white p-2 rounded-md hover:bg-red-700"
                   onClick={() => setIsOpen(false)}
-                  className="text-2xl font-bold text-white p-2 rounded-md  hover:bg-red-700"
                 >
-                  X
+                  <RxCross2 />
                 </button>
               </div>
 

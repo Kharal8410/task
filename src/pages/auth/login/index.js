@@ -1,52 +1,79 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import AuthContext from "../../../context/AuthContext";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const { login } = useContext(AuthContext);
+  const initialValue = {
+    name: "",
+    password: "",
+  };
+  const [formValue, setFormValue] = useState(initialValue);
+  const [formError, setFormError] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
+
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    const credentials = {
-      UserName: "huncha",
-      Password: "huncha",
-      Source: "D",
-      Device: "A",
-      NotToken: "eee",
-    };
-
-    try {
-      const response = await fetch(
-        "https://testing.esnep.com/happyhomes/api/admin/user",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Signature: "p0m76",
-          },
-          body: JSON.stringify(credentials),
-        }
-      );
-      //   const Values = await response.json();
-      if (response.ok) {
-        toast.success("Login successfully");
-        navigate("/dashboard");
-      } else {
-        toast.error("Incorrect username or password");
-      }
-    } catch (error) {
-      toast.error("Error during login:", error);
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValue({ ...formValue, [name]: value });
   };
+  const validate = (values) => {
+    const errors = {};
+    if (!values.name) {
+      errors.name = "Required";
+    }
+    if (!values.password) {
+      errors.password = "Required";
+    }
+    return errors;
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormError(validate(formValue));
+    setIsSubmit(true);
+  };
+  useEffect(() => {
+    if (Object.keys(formError).length === 0 && isSubmit) {
+      const dataForm = {
+        UserName: formValue.name,
+        Password: formValue.password,
+        Source: "D",
+        Device: "W",
+        NotToken: "",
+        AuthCode: "r1d3r",
+        Type: "POST",
+        FetchUrl: `https://testing.esnep.com/happyhomes/api/login`,
+      };
+      fetch(dataForm).then(function (result) {
+        if (result.StatusCode === 200) {
+          const postResult = result.Values[0];
+
+          setIsSubmit(false);
+          if (postResult.UserType === "S") {
+            localStorage.setItem("userInfo", JSON.stringify(postResult));
+            sessionStorage.setItem("userInfo", JSON.stringify(postResult));
+            login(postResult);
+            setIsSubmit(false);
+
+            navigate("/dashboard");
+          } else {
+            toast.error("user not authorized");
+            setIsSubmit(false);
+          }
+        } else {
+          setIsSubmit(false);
+        }
+      });
+    }
+  }, [formError]);
 
   return (
     <div className="flex items-center justify-center h-screen">
       <form
         className="w-[27%] m-auto p-4 border-t-4 border-pink-500 shadow-md rounded-md bg-slate-100 "
-        onSubmit={handleLogin}
+        onSubmit={handleSubmit}
       >
         <Toaster />
         <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
@@ -64,8 +91,8 @@ const Login = () => {
               id="userName"
               placeholder="Type your username"
               className="p-2 border rounded-md w-full"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              // value={formValue.name}
+              onChange={handleChange}
               required
             />
           </div>
@@ -81,8 +108,8 @@ const Login = () => {
               id="password"
               placeholder="Type your password"
               className="p-2 border rounded-md w-full"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              // value={formValue.password}
+              onChange={handleChange}
               required
             />
           </div>

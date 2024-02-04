@@ -73,34 +73,36 @@ function TableComponent({
     responseData.Values.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
-    <div className="container w-9/12 mx-auto p-4 sm:p-6 md:p-8 lg:p-10">
+    <>
       <TableContainer component={Paper}>
-        <Table aria-label="simple table" className="min-w-full">
+        <Table aria-label="simple table" className="">
           <TableHead className="bg-blue-500">
             <TableRow>
               <TableCell>
-                <span className="text-white text-lg">S.N.</span>
+                <span className="text-white text-md font-bold ">S.N.</span>
               </TableCell>
-              <TableCell align="center">
-                <span className="text-white text-lg">User Name</span>
+              <TableCell align="left">
+                <span className="text-white text-md font-bold ">User Name</span>
               </TableCell>
               <TableCell>
-                <span className="text-white text-lg">User ID</span>
+                <span className="text-white text-md font-bold ">UserID</span>
               </TableCell>
-              <TableCell align="center">
-                <span className="text-white text-lg">House Number</span>
+              <TableCell align="left">
+                <span className="text-white text-md font-bold ">House Num</span>
               </TableCell>
-              <TableCell align="center">
-                <span className="text-white text-lg">User Verification</span>
+              <TableCell align="left">
+                <span className="text-white text-md font-bold ">
+                  User Verification
+                </span>
               </TableCell>
-              <TableCell align="center">
-                <span className="text-white text-lg">Allow App</span>
+              <TableCell align="left">
+                <span className="text-white text-md font-bold ">Allow App</span>
               </TableCell>
-              <TableCell align="center">
-                <span className="text-white text-lg">Status</span>
+              <TableCell align="left">
+                <span className="text-white text-md font-bold "> Status </span>
               </TableCell>
-              <TableCell align="center">
-                <span className="text-white text-lg">Action</span>
+              <TableCell align="left">
+                <span className="text-white text-md font-bold "> Action </span>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -117,40 +119,40 @@ function TableComponent({
                   return (
                     <TableRow key={index}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell align="center">{user.UserName}</TableCell>
-                      <TableCell align="center">{user.MemID}</TableCell>
-                      <TableCell align="center">{user.DefHouseNum}</TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">{user.UserName}</TableCell>
+                      <TableCell align="left">{user.MemID}</TableCell>
+                      <TableCell align="left">{user.DefHouseNum}</TableCell>
+                      <TableCell align="left">
                         <button
                           onClick={() => {
                             handleUserVerificationChange(user);
                             setUserVerificationChange(user);
                           }}
-                          className="bg-green-700 text-white p-2 rounded-xl"
+                          className="bg-green-700 text-white p-1 rounded-xl"
                         >
                           {user.IsVerified === "Y"
                             ? "Verified"
                             : "Not verified"}
                         </button>
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">
                         <button
                           onClick={() => {
                             handleAllowAppChange(user);
                             setAllowAppChange(user);
                           }}
-                          className="bg-green-700 text-white p-2 rounded-xl"
+                          className="bg-green-700 text-white p-1 rounded-xl"
                         >
                           {user.IsAllow === "Y" ? "Allow" : "Not Allowed"}
                         </button>
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">
                         <button
                           onClick={() => {
                             handleStatusChange(user);
                             setStatusChange(user);
                           }}
-                          className="bg-green-700 text-white p-2 rounded-xl"
+                          className="bg-green-700 text-white p-1  rounded-xl"
                         >
                           {user.IsActive === "A" ? "Active" : "Not Active"}
                         </button>
@@ -173,22 +175,22 @@ function TableComponent({
               })}
           </TableBody>
         </Table>
-        <Stack
-          spacing={4}
-          className="grid place-items-center mt-4 sm:mx-4 md:mx-8 lg:mx-16 xl:mx-24"
-        >
-          <Pagination
-            count={Math.ceil((responseData?.Values.length || 0) / itemsPerPage)}
-            page={currentPage}
-            onChange={handlePageChange}
-            showFirstButton
-            showLastButton
-            variant="outlined"
-            shape="rounded"
-          />
-        </Stack>
       </TableContainer>
-    </div>
+      <Stack
+        spacing={4}
+        className="grid place-items-center mt-4 sm:mx-4 md:mx-8 lg:mx-16 xl:mx-24 "
+      >
+        <Pagination
+          count={Math.ceil((responseData?.Values.length || 0) / itemsPerPage)}
+          page={currentPage}
+          onChange={handlePageChange}
+          showFirstButton
+          showLastButton
+          variant="outlined"
+          shape="rounded"
+        />
+      </Stack>
+    </>
   );
 }
 

@@ -1,16 +1,23 @@
-import React from "react";
-
-import DashboardComponent from "./pages/Dashboard";
+import React, { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import Login from "./pages/auth/login";
+import AuthContext from "./context/AuthContext";
+import Dashboard from "./pages/Dashboard";
 
 const App = () => {
+  const { User } = useContext(AuthContext);
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="dashboard" element={<DashboardComponent />} />
-      </Routes>
+      {!User && (
+        <Routes>
+          <Route path="/" element={<Login />} />
+        </Routes>
+      )}
+      {User && (
+        <Routes>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      )}
     </>
   );
 };

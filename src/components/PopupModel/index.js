@@ -22,8 +22,8 @@ function PopupComponent() {
     Address: "",
     District: "",
     DefHouseNum: "",
-    IsAllow: "Y",
-    IsVerified: "Y",
+    IsAllow: "N",
+    IsVerified: "N",
     BranchID: "",
     FiscalID: "",
     AuthCode: "r1d3r",
@@ -106,8 +106,9 @@ function PopupComponent() {
               <div className="bg-blue-500 col-span-3 mb-4 flex justify-between p-4">
                 <h3 className="text-3xl font-bold text-white ">Add Owner</h3>
                 <button
+                  type="button"
+                  className="text-2xl font-bold text-white p-2 rounded-md hover:bg-red-700"
                   onClick={onCloseModal}
-                  className="text-2xl font-bold text-white p-2 rounded-md  hover:bg-red-700"
                 >
                   <RxCross2 />
                 </button>
