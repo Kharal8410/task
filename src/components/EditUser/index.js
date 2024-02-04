@@ -69,28 +69,6 @@ function EditUser() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const url = `https://testing.esnep.com/happyhomes/api/admin/user/update`;
-      const signature = "p0m76";
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          signature: signature,
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      console.log("User data updated successfully!");
-    } catch (error) {
-      console.error("Error updating user data:", error.message);
-    }
-  };
 
   const handleInputChange = (event) => {
     const { id, value } = event.target;
