@@ -1,11 +1,9 @@
-// import React, { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
-import Login from "./pages/auth/login";
-// import AuthContext from "./context/AuthContext";
-import Dashboard from "./pages/Dashboard";
+
+import Login from "./components/Login";
+import Dashboard from "./components/Dashboard";
 
 const App = () => {
-  // const { User } = useContext(AuthContext);
   return (
     <>
       <Routes>

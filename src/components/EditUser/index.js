@@ -111,7 +111,7 @@ function EditUser() {
               onClick={() => setIsOpen(false)}
             ></div>
 
-            <div className="bg-slate-100 w-10/12 rounded-md shadow-lg relative">
+            <div className="bg-slate-100 w-9/12 rounded-md shadow-lg relative">
               <div className="bg-blue-500 col-span-3 mb-4 flex justify-between p-4">
                 <h3 className="text-3xl font-bold text-white">Add Owner</h3>
                 <button
