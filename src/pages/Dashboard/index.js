@@ -147,13 +147,16 @@ function Dashboard() {
   };
 
   return (
-    <div className="container w-8/12 mx-auto p-2 sm:p-4 md:p-6 lg:p-8">
+    <div className="container w-11/12 mx-auto p-2 sm:p-4 md:p-6 lg:p-8">
       <Toaster />
-      <div>
-        <button onClick={logoutHandler}>Logout</button>
-      </div>
-      <div className=" ">
+      <div className="flex flex-row justify-between">
         <PopupComponent />
+        <button
+          onClick={logoutHandler}
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded "
+        >
+          Logout
+        </button>
       </div>
 
       <div className="flex flex-col sm:flex-row my-5  gap-2">

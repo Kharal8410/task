@@ -87,6 +87,7 @@ function TableComponent({
               <TableCell>
                 <span className="text-white text-md font-bold ">UserID</span>
               </TableCell>
+
               <TableCell align="left">
                 <span className="text-white text-md font-bold ">House Num</span>
               </TableCell>

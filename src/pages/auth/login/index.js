@@ -62,7 +62,7 @@ const Login = () => {
         .then((data) => {
           if (data.StatusCode === 200) {
             const postResult = data.Values[0];
-            console.log(postResult);
+            // console.log(postResult);
 
             setIsSubmitting(false);
             if (postResult.UserType === "S") {
@@ -85,7 +85,7 @@ const Login = () => {
             // }
           } else {
             setIsSubmitting(false);
-            toast.error("Invalid credentials");
+            toast.error("Invalid username or password");
           }
         })
         .catch((error) => {
@@ -94,7 +94,14 @@ const Login = () => {
           toast.error("An error occurred. Please try again later.");
         });
     }
-  }, [formErrors]);
+  }, [
+    formErrors,
+    formValues.name,
+    formValues.password,
+    isSubmitting,
+    login,
+    navigate,
+  ]);
 
   return (
     <div className="flex items-center justify-center h-screen">
