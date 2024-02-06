@@ -159,7 +159,7 @@ function TableComponent({
                         </button>
                       </TableCell>
                       <TableCell>
-                        <Edit userID={user.MemID} />
+                        <Edit user={user} />
 
                         <button
                           type="button"

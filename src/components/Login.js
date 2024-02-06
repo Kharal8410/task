@@ -48,9 +48,7 @@ const Login = () => {
           Source: "D",
           Device: "W",
           NotToken: "",
-          IsAllow: "",
           AuthCode: "r1d3r",
-          IsVerified: "Y",
           Type: "POST",
         }),
         headers: {

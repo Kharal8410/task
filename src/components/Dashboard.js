@@ -4,7 +4,6 @@ import PopupComponent from "./AddUser";
 import toast, { Toaster } from "react-hot-toast";
 import AuthContext from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import Edit from "./EditUser/Edit";
 
 function Dashboard() {
   const { logout } = useContext(AuthContext);
@@ -199,8 +198,6 @@ function Dashboard() {
         handleAllowAppChange={handleAllowAppChange}
         handleStatusChange={handleStatusChange}
       />
-
-      <Edit />
     </div>
   );
 }
