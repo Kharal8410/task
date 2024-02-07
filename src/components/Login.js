@@ -73,14 +73,6 @@ const Login = () => {
               toast.error("User not authorized");
               setIsSubmitting(false);
             }
-            // if (postResult.IsAllow === "N") {
-            //   localStorage.setItem("userInfo", JSON.stringify(postResult));
-            //   sessionStorage.setItem("userInfo", JSON.stringify(postResult));
-            //   login(postResult);
-            //   setIsSubmitting(false);
-            // } else {
-            //   toast.error("User not verified");
-            // }
           } else {
             setIsSubmitting(false);
             toast.error("Invalid username or password");

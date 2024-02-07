@@ -6,8 +6,8 @@ const Edit = ({ user }) => {
   const [openModal, setOpenModal] = useState(false);
   const { updateUser, setUpdateUser } = useContext(UserContext);
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
 
     try {
       const response = await fetch(
@@ -27,6 +27,7 @@ const Edit = ({ user }) => {
       }
 
       const updatedUserData = await response.json();
+      console.log(updatedUserData);
 
       setUpdateUser(updatedUserData);
 
@@ -70,7 +71,7 @@ const Edit = ({ user }) => {
 
             <div className="bg-slate-100 w-9/12  rounded-md shadow-lg  relative  ">
               <div className="bg-blue-500 col-span-3 mb-4 flex justify-between p-4">
-                <h3 className="text-3xl font-bold text-white ">edit</h3>
+                <h3 className="text-3xl font-bold text-white ">Edit</h3>
                 <button
                   type="button"
                   className="text-2xl font-bold text-white p-2 rounded-md hover:bg-red-700"
@@ -232,7 +233,7 @@ const Edit = ({ user }) => {
                     type="submit"
                     className="bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded mr-2"
                   >
-                    edit
+                    Edit
                   </button>
                   <button
                     type="button"

@@ -1,24 +1,35 @@
-import React, { useContext } from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { useState } from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
 import AuthContext from "./context/AuthContext";
-import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
+import Login from "./components/Login";
 
 const App = () => {
-  const { user } = useContext(AuthContext);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const login = () => {
+    setIsLoggedIn(true);
+  };
+
+  const logout = () => {
+    setIsLoggedIn(false);
+  };
+
   return (
-    <>
-      {!user && (
-        <Routes>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+      <Routes>
+        {isLoggedIn ? (
+          <Route Path="/dashboard" />
+        ) : (
           <Route path="/" element={<Login />} />
-        </Routes>
-      )}
-      {user && (
-        <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      )}
-    </>
+        )}
+
+        <Route
+          path="/dashboard"
+          element={isLoggedIn ? <Dashboard /> : <Navigate to="/" />}
+        />
+      </Routes>
+    </AuthContext.Provider>
   );
 };
 
