@@ -85,7 +85,7 @@ function TableComponent({
                 <span className="text-white text-md font-bold ">User Name</span>
               </TableCell>
               <TableCell>
-                <span className="text-white text-md font-bold ">UserID</span>
+                <span className="text-white text-md font-bold ">MemID</span>
               </TableCell>
 
               <TableCell align="left">
