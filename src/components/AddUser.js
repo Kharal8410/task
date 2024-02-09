@@ -47,7 +47,7 @@ function PopupComponent() {
         },
         body: JSON.stringify(formData),
       });
-      console.log(formData);
+      // console.log(formData);
 
       if (response.ok) {
         toast.success("User added successfully");
@@ -339,7 +339,7 @@ function PopupComponent() {
                 <div className="col-span-3 mt-6 flex justify-end">
                   <button
                     type="submit"
-                    className="bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded mr-2"
+                    className="bg-blue-500 hover:bg-blue-800 hover:underline text-white font-bold py-2 px-4 rounded mr-2"
                   >
                     Add
                   </button>

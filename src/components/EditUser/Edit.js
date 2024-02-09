@@ -8,42 +8,41 @@ const Edit = ({ user }) => {
 
   const [userInfo, setUserInfo] = useState([]);
 
-  const fetchData = async () => {
-    try {
-      const data = {
-        UserID: "-1",
-        Flag: "SI",
-        MemID: user.MemID.toString(),
-        AuthCode: "r1d3r",
-      };
-      const response = await fetch(
-        "https://testing.esnep.com/happyhomes/api/admin/user",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            signature: "p0m76",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const respData = await response.json();
-
-      setUserInfo(respData.Values);
-      // console.log(respData.Values[0]);
-    } catch (error) {
-      console.error("There was a problem with your fetch operation:", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = {
+          UserID: "-1",
+          Flag: "SI",
+          MemID: user.MemID.toString(),
+          AuthCode: "r1d3r",
+        };
+        const response = await fetch(
+          "https://testing.esnep.com/happyhomes/api/admin/user",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              signature: "p0m76",
+            },
+            body: JSON.stringify(data),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const respData = await response.json();
+
+        setUserInfo(respData.Values);
+      } catch (error) {
+        console.error("There was a problem with your fetch operation:", error);
+      }
+    };
+
     fetchData();
-  }, []);
+  }, [user]);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -68,7 +67,7 @@ const Edit = ({ user }) => {
       const updatedUserData = await response.json();
       console.log(updatedUserData);
 
-      setUpdateUser(updatedUserData);
+      setUserInfo(updatedUserData.Values);
 
       onCloseModal();
     } catch (error) {
@@ -125,7 +124,7 @@ const Edit = ({ user }) => {
               {userInfo &&
                 userInfo.map((user, idx) => (
                   <div key={idx} className="p-5 ">
-                    <h1>{user.MemID}</h1>
+                    <h1 className="text-lg font-bold my-1">{user.MemID}</h1>
                     <div className="flex flex-wrap  gap-4 mb-2 overflow-y-auto h-80 lg:h-full ">
                       <div className="w-full lg:w-[32%] md:w-[45%]">
                         <label
