@@ -3,6 +3,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import AuthContext from "./context/AuthContext";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
+import PageNotFound from "./components/PageNotFound";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -28,6 +29,8 @@ const App = () => {
           path="/dashboard"
           element={isLoggedIn ? <Dashboard /> : <Navigate to="/" />}
         />
+
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </AuthContext.Provider>
   );
