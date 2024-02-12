@@ -2,10 +2,10 @@ import React, { useState, useContext, useEffect } from "react";
 import { RiEdit2Fill } from "react-icons/ri";
 import { UserContext } from "../context/UpdateContex";
 import { RxCross2 } from "react-icons/rx";
+import toast from "react-hot-toast";
 const Edit = ({ user }) => {
   const [openModal, setOpenModal] = useState(false);
   const { updateUser, setUpdateUser } = useContext(UserContext);
-
   const [userInfo, setUserInfo] = useState([]);
 
   useEffect(() => {
@@ -52,11 +52,17 @@ const Edit = ({ user }) => {
         UserID: user.UserID,
         Flag: "U",
         AuthCode: "r1d3r",
+        MemID: user.MemID.toString(),
+        FirstName: userInfo.FirstName,
+        // MiddleName: user.MiddleName,
+        // LastName: user.LastName,
+        // Email: user.Email,
+        // UserName: user.UserName,
         ...updateUser,
       };
 
       const response = await fetch(
-        "https://testing.esnep.com/happyhomes/api/admin/user",
+        `https://testing.esnep.com/happyhomes/api/admin/user`,
         {
           method: "POST",
           headers: {
@@ -71,9 +77,7 @@ const Edit = ({ user }) => {
         throw new Error("Network response was not ok");
       }
 
-      const data = await response.json();
-
-      console.log("User updated successfully:", data);
+      toast.success("User updated successfully");
 
       onCloseModal();
     } catch (error) {
@@ -104,7 +108,7 @@ const Edit = ({ user }) => {
 
             <div className="bg-slate-100 w-10/12  rounded-md shadow-lg  relative  ">
               <div className="bg-blue-500 col-span-3 mb-4 flex justify-between p-4">
-                <h3 className="text-3xl font-bold text-white ">Edit</h3>
+                <h3 className="text-3xl font-bold text-white ">Edit User</h3>
                 <button
                   type="button"
                   className="text-2xl font-bold text-white p-2 rounded-md hover:bg-red-700"
@@ -115,9 +119,9 @@ const Edit = ({ user }) => {
               </div>
 
               {userInfo &&
-                userInfo.map((user, idx) => (
+                userInfo.map((userInfo, idx) => (
                   <div key={idx} className="p-5 ">
-                    <h1 className="text-lg font-bold my-1">{user.MemID}</h1>
+                    <h1 className="text-lg font-bold my-1">{userInfo.MemID}</h1>
                     <div className="flex flex-wrap  gap-4 mb-2 overflow-y-auto h-80 lg:h-full ">
                       <div className="w-full lg:w-[32%] md:w-[45%]">
                         <label
@@ -133,7 +137,7 @@ const Edit = ({ user }) => {
                           name="FirstName"
                           placeholder="First Name"
                           className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={user.FirstName}
+                          defaultValue={userInfo.FirstName}
                           onChange={(e) =>
                             setUpdateUser({
                               ...updateUser,
@@ -155,7 +159,7 @@ const Edit = ({ user }) => {
                           id="middleName"
                           placeholder="Middle Name"
                           className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={user.MiddleName}
+                          defaultValue={userInfo.MiddleName}
                           onChange={(e) =>
                             setUpdateUser({
                               ...updateUser,
@@ -177,7 +181,7 @@ const Edit = ({ user }) => {
                           id="lastName"
                           placeholder="Last Name"
                           className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={user.LastName}
+                          defaultValue={userInfo.LastName}
                           onChange={(e) =>
                             setUpdateUser({
                               ...updateUser,
@@ -202,7 +206,7 @@ const Edit = ({ user }) => {
                           name="Email"
                           placeholder="Email"
                           className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={user.Email}
+                          defaultValue={userInfo.Email}
                           onChange={(e) =>
                             setUpdateUser({
                               ...updateUser,
@@ -225,7 +229,7 @@ const Edit = ({ user }) => {
                           name="PhnNum"
                           placeholder="Phone Number"
                           className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={user.PhnNum}
+                          defaultValue={userInfo.PhnNum}
                           onChange={(e) =>
                             setUpdateUser({
                               ...updateUser,
@@ -247,15 +251,9 @@ const Edit = ({ user }) => {
                           id="userName"
                           name="UserName"
                           placeholder="User Name"
-                          defaultValue={user.UserName}
+                          defaultValue={userInfo.UserName}
                           className="border border-gray-300 p-2 my-1 rounded w-full"
-                          onChange={(e) =>
-                            setUpdateUser({
-                              ...updateUser,
-                              UserName: e.target.value,
-                            })
-                          }
-                          required
+                          readOnly
                         />
                       </div>
 
@@ -272,7 +270,7 @@ const Edit = ({ user }) => {
                           name="Contact"
                           placeholder="Contact"
                           className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={user.Contact}
+                          defaultValue={userInfo.Contact}
                           onChange={(e) =>
                             setUpdateUser({
                               ...updateUser,
@@ -296,7 +294,7 @@ const Edit = ({ user }) => {
                           name="Address"
                           placeholder="Address"
                           className="border border-gray-300 p-2 rounded w-full"
-                          defaultValue={user.Address}
+                          defaultValue={userInfo.Address}
                           onChange={(e) =>
                             setUpdateUser({
                               ...updateUser,
@@ -320,7 +318,7 @@ const Edit = ({ user }) => {
                           name="District"
                           placeholder="district"
                           className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={user.District}
+                          defaultValue={userInfo.District}
                           onChange={(e) =>
                             setUpdateUser({
                               ...updateUser,
@@ -342,7 +340,7 @@ const Edit = ({ user }) => {
                           name="DefHouseNum"
                           placeholder="House Number"
                           className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={user.DefHouseNum}
+                          defaultValue={userInfo.DefHouseNum}
                           onChange={(e) =>
                             setUpdateUser({
                               ...updateUser,
