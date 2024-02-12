@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { RiEdit2Fill } from "react-icons/ri";
-import { UserContext } from "../../context/UpdateContex";
+import { UserContext } from "../context/UpdateContex";
 import { RxCross2 } from "react-icons/rx";
 const Edit = ({ user }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -48,45 +48,38 @@ const Edit = ({ user }) => {
     e.preventDefault();
 
     try {
+      const userData = {
+        UserID: user.UserID,
+        Flag: "U",
+        AuthCode: "r1d3r",
+        ...updateUser,
+      };
+
       const response = await fetch(
         "https://testing.esnep.com/happyhomes/api/admin/user",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Signature: "p0m76",
+            signature: "p0m76",
           },
-          body: JSON.stringify(updateUser),
+          body: JSON.stringify(userData),
         }
       );
 
       if (!response.ok) {
-        throw new Error("Failed to update user information");
+        throw new Error("Network response was not ok");
       }
 
-      const updatedUserData = await response.json();
-      console.log(updatedUserData);
+      const data = await response.json();
 
-      setUserInfo(updatedUserData.Values);
+      console.log("User updated successfully:", data);
 
       onCloseModal();
     } catch (error) {
-      console.error("Error updating user information:", error);
+      console.error("There was a problem updating the user:", error);
     }
   };
-
-  // useEffect(() => {
-  //   setUpdateUser({
-  //     AuthCode: "r1d3r",
-  //     Flag: "U",
-  //     UserName: user.UserName,
-  //   });
-  // }, [setUpdateUser, user]);
-
-  // const handleInputChange = (event) => {
-  //   const { name, value } = event.target;
-  //   setUpdateUser({ ...updateUser, [name]: value });
-  // };
 
   const onCloseModal = () => {
     setOpenModal(false);
@@ -216,8 +209,6 @@ const Edit = ({ user }) => {
                               Email: e.target.value,
                             })
                           }
-                          // onChange={handleInputChange}
-                          // required
                         />
                       </div>
                       <div className="w-full lg:w-[32%] md:w-[45%]">
@@ -241,8 +232,6 @@ const Edit = ({ user }) => {
                               PhnNum: e.target.value,
                             })
                           }
-                          // onChange={handleInputChange}
-                          // required
                         />
                       </div>
                       <div className="w-full lg:w-[32%] md:w-[45%]">
@@ -260,7 +249,6 @@ const Edit = ({ user }) => {
                           placeholder="User Name"
                           defaultValue={user.UserName}
                           className="border border-gray-300 p-2 my-1 rounded w-full"
-                          // onChange={handleInputChange}
                           onChange={(e) =>
                             setUpdateUser({
                               ...updateUser,
@@ -291,7 +279,6 @@ const Edit = ({ user }) => {
                               Contact: e.target.value,
                             })
                           }
-                          // onChange={handleInputChange}
                         />
                       </div>
 
@@ -316,8 +303,6 @@ const Edit = ({ user }) => {
                               Address: e.target.value,
                             })
                           }
-                          // onChange={handleInputChange}
-                          // required
                         />
                       </div>
 
@@ -330,7 +315,7 @@ const Edit = ({ user }) => {
                           <span className="text-red-500 font-bold">*</span>
                         </label>
                         <input
-                          // type="number"
+                          type="number"
                           id="district"
                           name="District"
                           placeholder="district"
@@ -342,8 +327,6 @@ const Edit = ({ user }) => {
                               District: e.target.value,
                             })
                           }
-                          // onChange={handleInputChange}
-                          // required
                         />
                       </div>
                       <div className="w-full lg:w-[32%] md:w-[45%]">
@@ -366,7 +349,6 @@ const Edit = ({ user }) => {
                               DefHouseNum: e.target.value,
                             })
                           }
-                          // onChange={handleInputChange}
                         />
                       </div>
                     </div>
@@ -378,7 +360,7 @@ const Edit = ({ user }) => {
                         type="file"
                         id="uploadImage"
                         name="UserImage"
-                        className=" p-2 my-1  w-full "
+                        className=" p-2 my-1 w-full "
                       ></input>
                     </div>
 

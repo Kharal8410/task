@@ -9,7 +9,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
 import Table from "@mui/material/Table";
-import Edit from "./EditUser/Edit";
+import Edit from "./Edit";
 function TableComponent({
   filterIsVerified,
   filterIsAllow,
@@ -187,8 +187,8 @@ function TableComponent({
           onChange={handlePageChange}
           showFirstButton
           showLastButton
-          variant="outlined"
-          shape="rounded"
+          // variant="outlined"
+          // shape="rounded"
         />
       </Stack>
     </>
