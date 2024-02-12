@@ -24,7 +24,6 @@ const UserContextProvider = (props) => {
     IsVerified: "",
     BranchID: "",
     FiscalID: "",
-    MemID: "1",
   });
 
   const contextValue = {

@@ -53,11 +53,10 @@ const Edit = ({ user }) => {
         Flag: "U",
         AuthCode: "r1d3r",
         MemID: user.MemID.toString(),
-        FirstName: userInfo.FirstName,
+        FirstName: user.FirstName,
         // MiddleName: user.MiddleName,
         // LastName: user.LastName,
         // Email: user.Email,
-        // UserName: user.UserName,
         ...updateUser,
       };
 
@@ -81,7 +80,7 @@ const Edit = ({ user }) => {
 
       onCloseModal();
     } catch (error) {
-      console.error("There was a problem updating the user:", error);
+      toast.error("There was a problem updating the user:", error);
     }
   };
 
