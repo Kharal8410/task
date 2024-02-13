@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { GrPowerReset } from "react-icons/gr";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
@@ -10,6 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
 import Table from "@mui/material/Table";
 import Edit from "./Edit";
+import View from "./View";
 function TableComponent({
   filterIsVerified,
   filterIsAllow,
@@ -160,13 +160,7 @@ function TableComponent({
                       </TableCell>
                       <TableCell>
                         <Edit user={user} />
-
-                        <button
-                          type="button"
-                          className="bg-blue-500 p-1 rounded-lg text-white text-lg mx-2 "
-                        >
-                          <GrPowerReset />
-                        </button>
+                        <View user={user} />
                       </TableCell>
                     </TableRow>
                   );

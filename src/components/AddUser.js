@@ -34,32 +34,6 @@ function PopupComponent() {
     setImageSrc(null);
   }
 
-  async function postData() {
-    try {
-      const url = "https://testing.esnep.com/happyhomes/api/admin/user";
-      const signature = "p0m76";
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Signature: signature,
-        },
-        body: JSON.stringify(formData),
-      });
-      // console.log(formData);
-
-      if (response.ok) {
-        toast.success("User added successfully");
-        onCloseModal();
-      } else {
-        toast.error("Failed to add user");
-      }
-    } catch (error) {
-      toast.error("Error posting data");
-    }
-  }
-
   const addImage = () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
@@ -80,10 +54,46 @@ function PopupComponent() {
     fileInput.click();
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    postData();
+    if (imageSrc) {
+      const base64Data = imageSrc.split(",")[1];
+
+      const updatedFormData = {
+        ...formData,
+        UserImage: base64Data,
+      };
+
+      await postData(updatedFormData);
+    } else {
+      await postData(formData);
+    }
   };
+
+  async function postData(formData) {
+    try {
+      const url = "https://testing.esnep.com/happyhomes/api/admin/user";
+      const signature = "p0m76";
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Signature: signature,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        toast.success("User added successfully");
+        onCloseModal();
+      } else {
+        toast.error("Failed to add user");
+      }
+    } catch (error) {
+      toast.error("Error posting data");
+    }
+  }
 
   return (
     <>
@@ -285,7 +295,7 @@ function PopupComponent() {
                       <span className="text-red-500 font-bold">*</span>
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       id="district"
                       placeholder="district"
                       className="border border-gray-300 p-2 my-1 rounded w-full"
