@@ -5,7 +5,7 @@ import $ from "jquery";
 import Fetchdata from "./../../components/hooks/getData";
 
 function UserState(props) {
-  const appURL = process.env.REACT_APP_API_URL;
+  const appURL = "https://testing.esnep.com/happyhomes/api/";
   const initialValue = {
     firstname: "",
     middlename: "",
@@ -38,35 +38,35 @@ function UserState(props) {
 
   const [userList, setUserList] = useState([]);
 
-  useEffect(() => {
-    userLst();
-  }, []);
+  // useEffect(() => {
+  //   userLst();
+  // }, []);
 
-  const userLst = () => {
-    const params = {
-      UserID: "-1",
-      Flag: "S",
-      IsAllow: "-1",
-      IsVerified: "-1",
-      UserType: "O",
-      AuthCode: "r1d3r",
-      FetchURL: `${appURL}admin/user`,
-      Type: "POST",
-    };
+  // const userLst = () => {
+  //   const params = {
+  //     UserID: "-1",
+  //     Flag: "S",
+  //     IsAllow: "-1",
+  //     IsVerified: "-1",
+  //     UserType: "O",
+  //     AuthCode: "r1d3r",
+  //     FetchURL: `${appURL}admin/user`,
+  //     Type: "POST",
+  //   };
 
-    Fetchdata(params).then(function (resp) {
-      if (resp.StatusCode === 200) {
-        const postResult = resp.Values ? resp.Values : "";
-        setUserList(postResult);
-        setOriginalList(postResult);
-        setLoading(false);
-      } else {
-        setUserList([]);
-        setOriginalList([]);
-        setLoading(false);
-      }
-    });
-  };
+  //   Fetchdata(params).then(function (resp) {
+  //     if (resp.StatusCode === 200) {
+  //       const postResult = resp.Values ? resp.Values : "";
+  //       setUserList(postResult);
+  //       setOriginalList(postResult);
+  //       setLoading(false);
+  //     } else {
+  //       setUserList([]);
+  //       setOriginalList([]);
+  //       setLoading(false);
+  //     }
+  //   });
+  // };
 
   // to edit and view Todo
 
@@ -157,7 +157,7 @@ function UserState(props) {
         setVerified(false);
         setIsUploaded(false);
         setImage("");
-        userLst();
+        // userLst();
         info();
         $(".editUserPopBg").fadeOut(500);
         $(".editUserPop").slideUp(500);
@@ -194,7 +194,7 @@ function UserState(props) {
         setUserList,
         loading,
         setLoading,
-        userLst,
+        // userLst,
         editSubmit,
         setEditSubmit,
         originalList,

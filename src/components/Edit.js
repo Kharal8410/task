@@ -11,22 +11,21 @@ const EditUser = () => {
     userValues,
     setUserValues,
     formErrors,
-
     setFormErrors,
     editSubmit,
     setEditSubmit,
     editData,
-    initialValue,
-    // isUploaded,
-    setIsUploaded,
-    // typeFile,
-    setTypeFile,
-    // image,
-    setImage,
-    allow,
-    setAllow,
-    verified,
-    setVerified,
+    // initialValue,
+    // // isUploaded,
+    // setIsUploaded,
+    // // typeFile,
+    // setTypeFile,
+    // // image,
+    // setImage,
+    // allow,
+    // setAllow,
+    // verified,
+    // setVerified,
   } = useContext(UserContext);
 
   // useEffect(() => {
@@ -135,7 +134,7 @@ const EditUser = () => {
   return (
     <>
       <button
-        className="bg-blue-500 p-1 rounded-lg text-white text-lg mx-2"
+        className="bg-blue-500 p-1 rounded-lg text-white text-sm mx-2"
         onClick={() => setOpenModal(true)}
       >
         <RiEdit2Fill />
@@ -151,7 +150,7 @@ const EditUser = () => {
 
             <div className="bg-slate-100 w-7/12  rounded-md shadow-lg  relative  ">
               <div className="bg-blue-500 col-span-3 mb-4 flex justify-between p-4">
-                <h3 className="text-3xl font-bold text-white ">Edit User</h3>
+                <h3 className="text-3xl font-bold text-white  ">Edit User</h3>
                 <button
                   type="button"
                   className="text-2xl font-bold text-white p-2 rounded-md hover:bg-red-700"
