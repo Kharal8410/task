@@ -4,6 +4,8 @@ import AuthContext from "./context/AuthContext";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
 import PageNotFound from "./components/PageNotFound";
+// import UserContextProvider from "./context/userState/UserContext";
+import UserState from "./context/userState/UserState";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -23,15 +25,17 @@ const App = () => {
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route
-          path="/dashboard"
-          element={isLoggedIn ? <Dashboard /> : <Navigate to="/" />}
-        />
+      <UserState>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route
+            path="/dashboard"
+            element={isLoggedIn ? <Dashboard /> : <Navigate to="/" />}
+          />
 
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </UserState>
     </AuthContext.Provider>
   );
 };

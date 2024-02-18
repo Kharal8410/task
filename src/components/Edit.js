@@ -1,24 +1,27 @@
-import React, { useContext, useEffect } from "react";
-import CloseIcon from "./../images/CloseIcon.svg";
-import Plus from "./../images/Plus.png";
-import $ from "jquery";
+import React, { useContext, useEffect, useState } from "react";
+import { RiEdit2Fill } from "react-icons/ri";
+import { RxCross2 } from "react-icons/rx";
+
+// import $ from "jquery";
 import UserContext from "../context/userState/UserContext";
 
-const EditUser = ({ setEditPop, editPop }) => {
+const EditUser = () => {
+  const [openModal, setOpenModal] = useState(false);
   const {
     userValues,
     setUserValues,
     formErrors,
+
     setFormErrors,
     editSubmit,
     setEditSubmit,
     editData,
     initialValue,
-    isUploaded,
+    // isUploaded,
     setIsUploaded,
     // typeFile,
     setTypeFile,
-    image,
+    // image,
     setImage,
     allow,
     setAllow,
@@ -26,12 +29,12 @@ const EditUser = ({ setEditPop, editPop }) => {
     setVerified,
   } = useContext(UserContext);
 
-  useEffect(() => {
-    if (editPop) {
-      $(".editUserPopBg").fadeIn(500);
-      $(".editUserPop").slideDown(500);
-    }
-  }, [editPop]);
+  // useEffect(() => {
+  //   if (editPop) {
+  //     $(".editUserPopBg").fadeIn(500);
+  //     $(".editUserPop").slideDown(500);
+  //   }
+  // }, [editPop]);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -42,39 +45,38 @@ const EditUser = ({ setEditPop, editPop }) => {
     setUserValues({ ...userValues, [name]: value });
   };
 
-  const handleAllowChange = (e) => {
-    setAllow(!allow);
-  };
-  const handleVerifyChange = (e) => {
-    setVerified(!verified);
-  };
+  // const handleAllowChange = (e) => {
+  //   setAllow(!allow);
+  // };
+  // const handleVerifyChange = (e) => {
+  //   setVerified(!verified);
+  // };
 
-  function handleImageChange(e) {
-    if (e.target.files && e.target.files[0]) {
-      setTypeFile(e.target.files[0].type);
-      let reader = new FileReader();
+  // function handleImageChange(e) {
+  //   if (e.target.files && e.target.files[0]) {
+  //     setTypeFile(e.target.files[0].type);
+  //     let reader = new FileReader();
 
-      reader.onload = function (e) {
-        setImage(e.target.result);
-        setIsUploaded(true);
-      };
+  //     reader.onload = function (e) {
+  //       setImage(e.target.result);
+  //       setIsUploaded(true);
+  //     };
 
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  }
+  //     reader.readAsDataURL(e.target.files[0]);
+  //   }
+  // }
 
-  const closePopUp = (e) => {
-    setEditPop(false);
-    $(".editUserPopBg").fadeOut(500);
-    $(".editUserPop").slideUp(500);
-    setFormErrors({});
-    setEditSubmit(false);
-    setUserValues(initialValue);
-    setIsUploaded(false);
-    setImage("");
-    setAllow(false);
-    setVerified(false);
-  };
+  // const closePopUp = (e) => {
+  //   // setEditPop(false);
+
+  //   setFormErrors({});
+  //   setEditSubmit(false);
+  //   setUserValues(initialValue);
+  //   setIsUploaded(false);
+  //   setImage("");
+  //   setAllow(false);
+  //   setVerified(false);
+  // };
 
   const validate = (values) => {
     const errors = {};
@@ -126,334 +128,241 @@ const EditUser = ({ setEditPop, editPop }) => {
       setEditSubmit(false);
     }
   }, [formErrors]);
+  const onCloseModal = () => {
+    setOpenModal(false);
+  };
+
   return (
     <>
-      <div className="popup-bg editUserPopBg">
-        <div className="popup editUserPop">
-          <div className="popup-head">
-            <div className="popUpTitle">Edit</div>
-            <div className="popUpClose">
-              <img
-                className="popUpCloseIcon"
-                src={CloseIcon}
-                alt="CloseIcon"
-                onClick={closePopUp}
-              />
-            </div>
-          </div>
+      <button
+        className="bg-blue-500 p-1 rounded-lg text-white text-lg mx-2"
+        onClick={() => setOpenModal(true)}
+      >
+        <RiEdit2Fill />
+      </button>
 
-          <div className="popup-body p-3 editPopBody">
-            <div className="form__wrapper">
-              <div className="row  ">
-                <div className="col-md-4 wrapper">
-                  <div className="form-group">
-                    <label htmlFor="firstname">
+      {openModal && (
+        <form>
+          <div className="fixed inset-0 grid place-items-center ">
+            <div
+              className="bg-black opacity-50 absolute inset-0"
+              onClick={onCloseModal}
+            ></div>
+
+            <div className="bg-slate-100 w-7/12  rounded-md shadow-lg  relative  ">
+              <div className="bg-blue-500 col-span-3 mb-4 flex justify-between p-4">
+                <h3 className="text-3xl font-bold text-white ">Edit User</h3>
+                <button
+                  type="button"
+                  className="text-2xl font-bold text-white p-2 rounded-md hover:bg-red-700"
+                  onClick={onCloseModal}
+                >
+                  <RxCross2 />
+                </button>
+              </div>
+
+              <div className="p-5 ">
+                <div className="flex flex-wrap  gap-4 mb-2 overflow-y-auto h-80 lg:h-full ">
+                  <div className="w-full lg:w-[32%] md:w-[45%]">
+                    <label
+                      htmlFor="firstName"
+                      className="text-md font-semibold"
+                    >
                       First Name
-                      <sup style={{ color: "red" }}>*</sup>
+                      <span className="text-red-500 font-bold">*</span>
                     </label>
                     <input
                       id="firstname"
                       type="text"
                       name="firstname"
-                      className="form-control "
+                      className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
                       value={userValues.firstname}
                     />
                     {formErrors.firstname && (
-                      <p className="errormsg">{formErrors.firstname}</p>
+                      <p className="text-red-500 ">{formErrors.firstname}</p>
                     )}
                   </div>
-                </div>
-                <div className="col-md-4 wrapper">
-                  <div className="form-group">
-                    <label htmlFor="middlename">Middle Name</label>
+                  <div className="w-full lg:w-[32%] md:w-[45%]">
+                    <label
+                      htmlFor="middleName"
+                      className="text-md font-semibold"
+                    >
+                      Middle Name
+                    </label>
                     <input
                       id="middlename"
                       type="text"
                       name="middlename"
-                      className="form-control "
+                      className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
                       value={userValues.middlename}
                     />
                   </div>
-                </div>
-                <div className="col-md-4 wrapper">
-                  <div className="form-group">
-                    <label htmlFor="lastname">
+                  <div className="w-full lg:w-[32%] md:w-[45%]">
+                    <label htmlFor="lastName" className="text-md font-semibold">
                       Last Name
-                      <sup style={{ color: "red" }}>*</sup>
+                      <span className="text-red-500 font-bold">*</span>
                     </label>
                     <input
                       id="lastname"
                       type="text"
                       name="lastname"
-                      className="form-control "
+                      className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
                       value={userValues.lastname}
                     />
+                    {formErrors.email && (
+                      <p className="text-red-500 ">{formErrors.lastname}</p>
+                    )}
                   </div>
-                </div>
-              </div>
 
-              <div className="row  ">
-                <div className="col-md-4 wrapper">
-                  <div className="form-group">
-                    <label htmlFor="email">
+                  <div className="w-full lg:w-[32%] md:w-[45%]">
+                    <label htmlFor="email" className="text-md font-semibold">
                       Email
-                      <sup style={{ color: "red" }}>*</sup>
+                      <span className="text-red-500 font-bold">*</span>
                     </label>
                     <input
                       id="email"
-                      type="email"
+                      type="text"
                       name="email"
-                      className="form-control "
+                      className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
                       value={userValues.email}
                     />
                     {formErrors.email && (
-                      <p className="errormsg">{formErrors.email}</p>
+                      <p className="text-red-500 ">{formErrors.email}</p>
                     )}
                   </div>
-                </div>
-                <div className="col-md-4 wrapper">
-                  <div className="form-group">
-                    <label htmlFor="phone">
+                  <div className="w-full lg:w-[32%] md:w-[45%]">
+                    <label htmlFor="phNum" className="text-md font-semibold">
                       Phone Number
-                      <sup style={{ color: "red" }}>*</sup>
+                      <span className="text-red-500 font-bold">*</span>
                     </label>
                     <input
                       id="phone"
                       type="text"
                       name="phone"
-                      className="form-control "
+                      className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
                       value={userValues.phone}
                     />
                     {formErrors.phone && (
-                      <p className="errormsg">{formErrors.phone}</p>
+                      <p className="text-red-500 ">{formErrors.phone}</p>
                     )}
                   </div>
-                </div>
-                <div className="col-md-4 wrapper">
-                  <div className="form-group">
-                    <label htmlFor="username">
-                      Username
-                      <sup style={{ color: "red" }}>*</sup>
+                  <div className="w-full lg:w-[32%] md:w-[45%]">
+                    <label htmlFor="userName" className="text-md font-semibold">
+                      User Name
+                      <span className="text-red-500 font-bold">*</span>
                     </label>
                     <input
                       id="username"
                       type="text"
                       name="username"
-                      className="form-control "
+                      className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
                       value={userValues.username}
                     />
                     {formErrors.username && (
-                      <p className="errormsg">{formErrors.username}</p>
+                      <p className="text-red-500 ">{formErrors.username}</p>
                     )}
                   </div>
-                </div>
-              </div>
-              <div className="row  ">
-                <div className="col-md-4 wrapper">
-                  <div className="form-group">
-                    <label htmlFor="contact">Contact</label>
+
+                  <div className="w-full lg:w-[32%] md:w-[45%] relative">
+                    <label htmlFor="contact" className="text-md font-semibold">
+                      Contact
+                    </label>
                     <input
                       id="contact"
                       type="text"
                       name="contact"
-                      className="form-control "
+                      className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
                       value={userValues.contact}
                     />
                   </div>
-                </div>
-                <div className="col-md-4 wrapper">
-                  <div className="form-group">
-                    <label htmlFor="address">
+
+                  <div className="w-full lg:w-[32%] md:w-[45%]">
+                    <label htmlFor="address" className="text-md font-semibold">
                       Address
-                      <sup style={{ color: "red" }}>*</sup>
+                      <span className="text-red-500 font-bold">*</span>
                     </label>
                     <input
                       id="address"
                       type="text"
                       name="address"
-                      className="form-control "
+                      className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
                       value={userValues.address}
                     />
                     {formErrors.address && (
-                      <p className="errormsg">{formErrors.address}</p>
+                      <p className="text-red-500 ">{formErrors.address}</p>
                     )}
                   </div>
-                </div>
-                <div className="col-md-4 wrapper">
-                  <div className="form-group">
-                    <label htmlFor="district">
+
+                  <div className="w-full lg:w-[32%] md:w-[45%]">
+                    <label htmlFor="district" className="text-md font-semibold">
                       District
-                      <sup style={{ color: "red" }}>*</sup>
+                      <span className="text-red-500 font-bold">*</span>
                     </label>
                     <input
                       id="district"
                       type="text"
                       name="district"
-                      className="form-control "
+                      className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
                       value={userValues.district}
                     />
                     {formErrors.district && (
-                      <p className="errormsg">{formErrors.district}</p>
+                      <p className="text-red-500 ">{formErrors.district}</p>
                     )}
                   </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-4 wrapper">
-                  <div className="form-group">
-                    <label htmlFor="defHouseNum">House Number</label>
+                  <div className="w-full lg:w-[32%] md:w-[45%]">
+                    <label htmlFor="houseNum" className="text-md font-semibold">
+                      House Number
+                    </label>
                     <input
                       id="defHouseNum"
                       type="text"
                       name="defHouseNum"
-                      className="form-control "
+                      className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
                       value={userValues.defHouseNum}
                     />
                   </div>
                 </div>
-              </div>
-              <div className="row ">
-                <div className="form-group wrapper ">
-                  <div
-                    className="form-label"
-                    htmlFor="text"
-                    style={{ fontSize: "12px", textAlign: "left" }}
-                  >
-                    Upload Image
-                  </div>
-
-                  <div className="BoxUpload">
-                    <div className="image-upload">
-                      {!isUploaded ? (
-                        <>
-                          <label htmlFor="upload-input">
-                            <img
-                              src={Plus}
-                              draggable={"false"}
-                              alt="placeholder"
-                              style={{
-                                width: 90,
-                                height: 100,
-                                paddingTop: "10px",
-                              }}
-                            />
-                          </label>
-
-                          <input
-                            id="upload-input"
-                            type="file"
-                            accept=".jpg,.jpeg,.gif,.png,.mov,.mp4"
-                            onChange={handleImageChange}
-                            name="image"
-                          />
-                        </>
-                      ) : (
-                        <div className="ImagePreview">
-                          <img
-                            className="close-icon"
-                            src={CloseIcon}
-                            alt="CloseIcon"
-                            onClick={() => {
-                              setIsUploaded(false);
-                              setImage(null);
-                            }}
-                          />
-
-                          <img
-                            id="uploaded-image"
-                            src={image}
-                            draggable={false}
-                            alt="uploaded-img"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="">
+                <div>
+                  <span className="text-md font-semibold ">Upload Image:</span>
                   <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id="allow"
-                    name="allow"
-                    onChange={handleAllowChange}
-                    checked={allow}
-                    style={{ marginTop: "10px", cursor: "pointer" }}
-                  />
-                  <label
-                    class="form-check-label ms-1"
-                    for="allow"
-                    style={{
-                      fontSize: "14px",
-                      marginTop: "8px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Allow
-                  </label>
+                    type="file"
+                    id="uploadImage"
+                    name="UserImage"
+                    className=" p-2 my-1 w-full "
+                  ></input>
                 </div>
-                <div className=" ">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id="verified"
-                    name="verified"
-                    onChange={handleVerifyChange}
-                    checked={verified}
-                    style={{ marginTop: "10px", cursor: "pointer" }}
-                  />
-                  <label
-                    class="form-check-label ms-1"
-                    for="verified"
-                    style={{
-                      fontSize: "14px",
-                      marginTop: "8px",
-                      cursor: "pointer",
-                    }}
+
+                <div className="col-span-3 mt-6 flex justify-end">
+                  <button
+                    type="button"
+                    className="bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded mr-2"
+                    onClick={handleSubmit}
                   >
-                    Verify
-                  </label>
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="border border-red-500 text-red-500 hover:text-white hover:underline hover:bg-red-500 font-bold py-2 px-4 rounded"
+                    onClick={onCloseModal}
+                  >
+                    Cancel
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-
-          <div className="popup-footer">
-            <div className="row  mt-1 mb-1">
-              <div>
-                <button
-                  type="button"
-                  className="btn btn-sm me-2"
-                  style={{ background: "#4681c3", color: "white" }}
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-sm btn-danger me-3"
-                  style={{ color: "white" }}
-                  onClick={closePopUp}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        </form>
+      )}
     </>
   );
 };

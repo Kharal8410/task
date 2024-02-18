@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import UserContext from "./UserContext";
 import $ from "jquery";
-import { Fetchdata } from "../../hooks/getData";
+import Fetchdata from "./../../components/hooks/getData";
 
 function UserState(props) {
-  const appURL = `https://testing.esnep.com/happyhomes/api/admin/user`;
+  const appURL = process.env.REACT_APP_API_URL;
   const initialValue = {
     firstname: "",
     middlename: "",
