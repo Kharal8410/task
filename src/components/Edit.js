@@ -1,389 +1,461 @@
-import React, { useState, useContext, useEffect } from "react";
-import { RiEdit2Fill } from "react-icons/ri";
-import { UserContext } from "../context/UpdateContex";
-import { RxCross2 } from "react-icons/rx";
-import toast from "react-hot-toast";
-const Edit = ({ user }) => {
-  const [openModal, setOpenModal] = useState(false);
-  const { updateUser, setUpdateUser } = useContext(UserContext);
-  const [userInfo, setUserInfo] = useState([]);
+import React, { useContext, useEffect } from "react";
+import CloseIcon from "./../images/CloseIcon.svg";
+import Plus from "./../images/Plus.png";
+import $ from "jquery";
+import UserContext from "../context/userState/UserContext";
+
+const EditUser = ({ setEditPop, editPop }) => {
+  const {
+    userValues,
+    setUserValues,
+    formErrors,
+    setFormErrors,
+    editSubmit,
+    setEditSubmit,
+    editData,
+    initialValue,
+    isUploaded,
+    setIsUploaded,
+    // typeFile,
+    setTypeFile,
+    image,
+    setImage,
+    allow,
+    setAllow,
+    verified,
+    setVerified,
+  } = useContext(UserContext);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = {
-          UserID: "-1",
-          Flag: "SI",
-          MemID: user.MemID.toString(),
-          AuthCode: "r1d3r",
-        };
-        const response = await fetch(
-          "https://testing.esnep.com/happyhomes/api/admin/user",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              signature: "p0m76",
-            },
-            body: JSON.stringify(data),
-          }
-        );
+    if (editPop) {
+      $(".editUserPopBg").fadeIn(500);
+      $(".editUserPop").slideDown(500);
+    }
+  }, [editPop]);
 
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const respData = await response.json();
-
-        setUserInfo(respData.Values);
-      } catch (error) {
-        console.error("There was a problem with your fetch operation:", error);
-      }
-    };
-
-    fetchData();
-  }, [user]);
-
-  const handleFormSubmit = async (e) => {
+  const handleChange = (e) => {
     e.preventDefault();
+    const target = e.target;
+    const name = target.name;
+    const value = target.type === "checkbox" ? target.checked : target.value;
 
-    try {
-      const userData = {
-        UserID: user.UserID,
-        Flag: "U",
-        AuthCode: "r1d3r",
-        MemID: user.MemID.toString(),
-        FirstName: user.FirstName,
-        // MiddleName: user.MiddleName,
-        // LastName: user.LastName,
-        // Email: user.Email,
-        ...updateUser,
+    setUserValues({ ...userValues, [name]: value });
+  };
+
+  const handleAllowChange = (e) => {
+    setAllow(!allow);
+  };
+  const handleVerifyChange = (e) => {
+    setVerified(!verified);
+  };
+
+  function handleImageChange(e) {
+    if (e.target.files && e.target.files[0]) {
+      setTypeFile(e.target.files[0].type);
+      let reader = new FileReader();
+
+      reader.onload = function (e) {
+        setImage(e.target.result);
+        setIsUploaded(true);
       };
 
-      const response = await fetch(
-        `https://testing.esnep.com/happyhomes/api/admin/user`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            signature: "p0m76",
-          },
-          body: JSON.stringify(userData),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      toast.success("User updated successfully");
-
-      onCloseModal();
-    } catch (error) {
-      toast.error("There was a problem updating the user:", error);
+      reader.readAsDataURL(e.target.files[0]);
     }
+  }
+
+  const closePopUp = (e) => {
+    setEditPop(false);
+    $(".editUserPopBg").fadeOut(500);
+    $(".editUserPop").slideUp(500);
+    setFormErrors({});
+    setEditSubmit(false);
+    setUserValues(initialValue);
+    setIsUploaded(false);
+    setImage("");
+    setAllow(false);
+    setVerified(false);
   };
 
-  const onCloseModal = () => {
-    setOpenModal(false);
+  const validate = (values) => {
+    const errors = {};
+    const numv = /^[0-9]+$/i;
+    const digits = /^\d{10}$/;
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+
+    if (!values.firstname) {
+      errors.firstname = "Required";
+    }
+    if (!values.lastname) {
+      errors.lastname = "Required";
+    }
+    if (!values.email) {
+      errors.email = "Required";
+    } else if (!regex.test(values.email)) {
+      errors.email = "This is not a valid email format";
+    }
+
+    if (!values.phone) {
+      errors.phone = "Required";
+    } else if (!numv.test(values.phone)) {
+      errors.phone = "Must be digits";
+    } else if (!digits.test(values.phone)) {
+      errors.phone = "Must be 10 digits";
+    }
+    if (!values.username) {
+      errors.username = "Required";
+    }
+    if (!values.address) {
+      errors.address = "Required";
+    }
+    if (!values.district) {
+      errors.district = "Required";
+    }
+
+    return errors;
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormErrors(validate(userValues));
+    setEditSubmit(true);
+  };
+
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && editSubmit) {
+      editData(userValues);
+      setEditSubmit(false);
+    }
+  }, [formErrors]);
   return (
     <>
-      <button
-        className="bg-blue-500 p-1 rounded-lg text-white text-lg mx-2"
-        onClick={() => setOpenModal(true)}
-      >
-        <RiEdit2Fill />
-      </button>
-
-      {openModal && (
-        <form onSubmit={handleFormSubmit}>
-          <div className="fixed inset-0 grid place-items-center ">
-            <div
-              className="bg-black opacity-50 absolute inset-0"
-              onClick={onCloseModal}
-            ></div>
-
-            <div className="bg-slate-100 w-10/12  rounded-md shadow-lg  relative  ">
-              <div className="bg-blue-500 col-span-3 mb-4 flex justify-between p-4">
-                <h3 className="text-3xl font-bold text-white ">Edit User</h3>
-                <button
-                  type="button"
-                  className="text-2xl font-bold text-white p-2 rounded-md hover:bg-red-700"
-                  onClick={onCloseModal}
-                >
-                  <RxCross2 />
-                </button>
-              </div>
-
-              {userInfo &&
-                userInfo.map((userInfo, idx) => (
-                  <div key={idx} className="p-5 ">
-                    <h1 className="text-lg font-bold my-1">{userInfo.MemID}</h1>
-                    <div className="flex flex-wrap  gap-4 mb-2 overflow-y-auto h-80 lg:h-full ">
-                      <div className="w-full lg:w-[32%] md:w-[45%]">
-                        <label
-                          htmlFor="firstName"
-                          className="text-md font-semibold"
-                        >
-                          First Name
-                          <span className="text-red-500 font-bold">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          id="firstName"
-                          name="FirstName"
-                          placeholder="First Name"
-                          className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={userInfo.FirstName}
-                          onChange={(e) =>
-                            setUpdateUser({
-                              ...updateUser,
-                              FirstName: e.target.value,
-                            })
-                          }
-                          required
-                        />
-                      </div>
-                      <div className="w-full lg:w-[32%] md:w-[45%]">
-                        <label
-                          htmlFor="middleName"
-                          className="text-md font-semibold"
-                        >
-                          Middle Name
-                        </label>
-                        <input
-                          type="text"
-                          id="middleName"
-                          placeholder="Middle Name"
-                          className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={userInfo.MiddleName}
-                          onChange={(e) =>
-                            setUpdateUser({
-                              ...updateUser,
-                              MiddleName: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="w-full lg:w-[32%] md:w-[45%]">
-                        <label
-                          htmlFor="lastName"
-                          className="text-md font-semibold"
-                        >
-                          Last Name
-                          <span className="text-red-500 font-bold">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          id="lastName"
-                          placeholder="Last Name"
-                          className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={userInfo.LastName}
-                          onChange={(e) =>
-                            setUpdateUser({
-                              ...updateUser,
-                              LastName: e.target.value,
-                            })
-                          }
-                          required
-                        />
-                      </div>
-
-                      <div className="w-full lg:w-[32%] md:w-[45%]">
-                        <label
-                          htmlFor="email"
-                          className="text-md font-semibold"
-                        >
-                          Email
-                          <span className="text-red-500 font-bold">*</span>
-                        </label>
-                        <input
-                          type="email"
-                          id="email"
-                          name="Email"
-                          placeholder="Email"
-                          className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={userInfo.Email}
-                          onChange={(e) =>
-                            setUpdateUser({
-                              ...updateUser,
-                              Email: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="w-full lg:w-[32%] md:w-[45%]">
-                        <label
-                          htmlFor="phNum"
-                          className="text-md font-semibold"
-                        >
-                          Phone Number
-                          <span className="text-red-500 font-bold">*</span>
-                        </label>
-                        <input
-                          type="number"
-                          id="phNum"
-                          name="PhnNum"
-                          placeholder="Phone Number"
-                          className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={userInfo.PhnNum}
-                          onChange={(e) =>
-                            setUpdateUser({
-                              ...updateUser,
-                              PhnNum: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="w-full lg:w-[32%] md:w-[45%]">
-                        <label
-                          htmlFor="userName"
-                          className="text-md font-semibold"
-                        >
-                          User Name
-                          <span className="text-red-500 font-bold">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          id="userName"
-                          name="UserName"
-                          placeholder="User Name"
-                          defaultValue={userInfo.UserName}
-                          className="border border-gray-300 p-2 my-1 rounded w-full"
-                          readOnly
-                        />
-                      </div>
-
-                      <div className="w-full lg:w-[32%] md:w-[45%] relative">
-                        <label
-                          htmlFor="contact"
-                          className="text-md font-semibold"
-                        >
-                          Contact
-                        </label>
-                        <input
-                          type="number"
-                          id="contact"
-                          name="Contact"
-                          placeholder="Contact"
-                          className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={userInfo.Contact}
-                          onChange={(e) =>
-                            setUpdateUser({
-                              ...updateUser,
-                              Contact: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-
-                      <div className="w-full lg:w-[32%] md:w-[45%]">
-                        <label
-                          htmlFor="address"
-                          className="text-md font-semibold"
-                        >
-                          Address
-                          <span className="text-red-500 font-bold">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          id="address"
-                          name="Address"
-                          placeholder="Address"
-                          className="border border-gray-300 p-2 rounded w-full"
-                          defaultValue={userInfo.Address}
-                          onChange={(e) =>
-                            setUpdateUser({
-                              ...updateUser,
-                              Address: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-
-                      <div className="w-full lg:w-[32%] md:w-[45%]">
-                        <label
-                          htmlFor="district"
-                          className="text-md font-semibold"
-                        >
-                          District
-                          <span className="text-red-500 font-bold">*</span>
-                        </label>
-                        <input
-                          type="number"
-                          id="district"
-                          name="District"
-                          placeholder="district"
-                          className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={userInfo.District}
-                          onChange={(e) =>
-                            setUpdateUser({
-                              ...updateUser,
-                              District: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="w-full lg:w-[32%] md:w-[45%]">
-                        <label
-                          htmlFor="houseNum"
-                          className="text-md font-semibold"
-                        >
-                          House Number
-                        </label>
-                        <input
-                          type="number"
-                          id="houseNum"
-                          name="DefHouseNum"
-                          placeholder="House Number"
-                          className="border border-gray-300 p-2 my-1 rounded w-full"
-                          defaultValue={userInfo.DefHouseNum}
-                          onChange={(e) =>
-                            setUpdateUser({
-                              ...updateUser,
-                              DefHouseNum: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <span className="text-md font-semibold ">
-                        Upload Image:
-                      </span>
-                      <input
-                        type="file"
-                        id="uploadImage"
-                        name="UserImage"
-                        className=" p-2 my-1 w-full "
-                      ></input>
-                    </div>
-
-                    <div className="col-span-3 mt-6 flex justify-end">
-                      <button
-                        type="submit"
-                        className="bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded mr-2"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        className="border border-red-500 text-red-500 hover:text-white hover:underline hover:bg-red-500 font-bold py-2 px-4 rounded"
-                        onClick={onCloseModal}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                ))}
+      <div className="popup-bg editUserPopBg">
+        <div className="popup editUserPop">
+          <div className="popup-head">
+            <div className="popUpTitle">Edit</div>
+            <div className="popUpClose">
+              <img
+                className="popUpCloseIcon"
+                src={CloseIcon}
+                alt="CloseIcon"
+                onClick={closePopUp}
+              />
             </div>
           </div>
-        </form>
-      )}
+
+          <div className="popup-body p-3 editPopBody">
+            <div className="form__wrapper">
+              <div className="row  ">
+                <div className="col-md-4 wrapper">
+                  <div className="form-group">
+                    <label htmlFor="firstname">
+                      First Name
+                      <sup style={{ color: "red" }}>*</sup>
+                    </label>
+                    <input
+                      id="firstname"
+                      type="text"
+                      name="firstname"
+                      className="form-control "
+                      onChange={handleChange}
+                      value={userValues.firstname}
+                    />
+                    {formErrors.firstname && (
+                      <p className="errormsg">{formErrors.firstname}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="col-md-4 wrapper">
+                  <div className="form-group">
+                    <label htmlFor="middlename">Middle Name</label>
+                    <input
+                      id="middlename"
+                      type="text"
+                      name="middlename"
+                      className="form-control "
+                      onChange={handleChange}
+                      value={userValues.middlename}
+                    />
+                  </div>
+                </div>
+                <div className="col-md-4 wrapper">
+                  <div className="form-group">
+                    <label htmlFor="lastname">
+                      Last Name
+                      <sup style={{ color: "red" }}>*</sup>
+                    </label>
+                    <input
+                      id="lastname"
+                      type="text"
+                      name="lastname"
+                      className="form-control "
+                      onChange={handleChange}
+                      value={userValues.lastname}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="row  ">
+                <div className="col-md-4 wrapper">
+                  <div className="form-group">
+                    <label htmlFor="email">
+                      Email
+                      <sup style={{ color: "red" }}>*</sup>
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      name="email"
+                      className="form-control "
+                      onChange={handleChange}
+                      value={userValues.email}
+                    />
+                    {formErrors.email && (
+                      <p className="errormsg">{formErrors.email}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="col-md-4 wrapper">
+                  <div className="form-group">
+                    <label htmlFor="phone">
+                      Phone Number
+                      <sup style={{ color: "red" }}>*</sup>
+                    </label>
+                    <input
+                      id="phone"
+                      type="text"
+                      name="phone"
+                      className="form-control "
+                      onChange={handleChange}
+                      value={userValues.phone}
+                    />
+                    {formErrors.phone && (
+                      <p className="errormsg">{formErrors.phone}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="col-md-4 wrapper">
+                  <div className="form-group">
+                    <label htmlFor="username">
+                      Username
+                      <sup style={{ color: "red" }}>*</sup>
+                    </label>
+                    <input
+                      id="username"
+                      type="text"
+                      name="username"
+                      className="form-control "
+                      onChange={handleChange}
+                      value={userValues.username}
+                    />
+                    {formErrors.username && (
+                      <p className="errormsg">{formErrors.username}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="row  ">
+                <div className="col-md-4 wrapper">
+                  <div className="form-group">
+                    <label htmlFor="contact">Contact</label>
+                    <input
+                      id="contact"
+                      type="text"
+                      name="contact"
+                      className="form-control "
+                      onChange={handleChange}
+                      value={userValues.contact}
+                    />
+                  </div>
+                </div>
+                <div className="col-md-4 wrapper">
+                  <div className="form-group">
+                    <label htmlFor="address">
+                      Address
+                      <sup style={{ color: "red" }}>*</sup>
+                    </label>
+                    <input
+                      id="address"
+                      type="text"
+                      name="address"
+                      className="form-control "
+                      onChange={handleChange}
+                      value={userValues.address}
+                    />
+                    {formErrors.address && (
+                      <p className="errormsg">{formErrors.address}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="col-md-4 wrapper">
+                  <div className="form-group">
+                    <label htmlFor="district">
+                      District
+                      <sup style={{ color: "red" }}>*</sup>
+                    </label>
+                    <input
+                      id="district"
+                      type="text"
+                      name="district"
+                      className="form-control "
+                      onChange={handleChange}
+                      value={userValues.district}
+                    />
+                    {formErrors.district && (
+                      <p className="errormsg">{formErrors.district}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-4 wrapper">
+                  <div className="form-group">
+                    <label htmlFor="defHouseNum">House Number</label>
+                    <input
+                      id="defHouseNum"
+                      type="text"
+                      name="defHouseNum"
+                      className="form-control "
+                      onChange={handleChange}
+                      value={userValues.defHouseNum}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="row ">
+                <div className="form-group wrapper ">
+                  <div
+                    className="form-label"
+                    htmlFor="text"
+                    style={{ fontSize: "12px", textAlign: "left" }}
+                  >
+                    Upload Image
+                  </div>
+
+                  <div className="BoxUpload">
+                    <div className="image-upload">
+                      {!isUploaded ? (
+                        <>
+                          <label htmlFor="upload-input">
+                            <img
+                              src={Plus}
+                              draggable={"false"}
+                              alt="placeholder"
+                              style={{
+                                width: 90,
+                                height: 100,
+                                paddingTop: "10px",
+                              }}
+                            />
+                          </label>
+
+                          <input
+                            id="upload-input"
+                            type="file"
+                            accept=".jpg,.jpeg,.gif,.png,.mov,.mp4"
+                            onChange={handleImageChange}
+                            name="image"
+                          />
+                        </>
+                      ) : (
+                        <div className="ImagePreview">
+                          <img
+                            className="close-icon"
+                            src={CloseIcon}
+                            alt="CloseIcon"
+                            onClick={() => {
+                              setIsUploaded(false);
+                              setImage(null);
+                            }}
+                          />
+
+                          <img
+                            id="uploaded-image"
+                            src={image}
+                            draggable={false}
+                            alt="uploaded-img"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="allow"
+                    name="allow"
+                    onChange={handleAllowChange}
+                    checked={allow}
+                    style={{ marginTop: "10px", cursor: "pointer" }}
+                  />
+                  <label
+                    class="form-check-label ms-1"
+                    for="allow"
+                    style={{
+                      fontSize: "14px",
+                      marginTop: "8px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Allow
+                  </label>
+                </div>
+                <div className=" ">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="verified"
+                    name="verified"
+                    onChange={handleVerifyChange}
+                    checked={verified}
+                    style={{ marginTop: "10px", cursor: "pointer" }}
+                  />
+                  <label
+                    class="form-check-label ms-1"
+                    for="verified"
+                    style={{
+                      fontSize: "14px",
+                      marginTop: "8px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Verify
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="popup-footer">
+            <div className="row  mt-1 mb-1">
+              <div>
+                <button
+                  type="button"
+                  className="btn btn-sm me-2"
+                  style={{ background: "#4681c3", color: "white" }}
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-danger me-3"
+                  style={{ color: "white" }}
+                  onClick={closePopUp}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
 
-export default Edit;
+export default EditUser;

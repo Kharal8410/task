@@ -8,8 +8,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
 import Table from "@mui/material/Table";
-import Edit from "./Edit";
 import View from "./View";
+import EditUser from "./Edit";
 function TableComponent({
   filterIsVerified,
   filterIsAllow,
@@ -159,7 +159,7 @@ function TableComponent({
                         </button>
                       </TableCell>
                       <TableCell>
-                        <Edit user={user} />
+                        <EditUser />
                         <View user={user} />
                       </TableCell>
                     </TableRow>
