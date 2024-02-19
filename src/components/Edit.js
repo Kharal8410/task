@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { RiEdit2Fill } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
-
-// import $ from "jquery";
 import UserContext from "../context/userState/UserContext";
+import Close from "../images/CloseIcon.svg";
+import { AiOutlinePlus } from "react-icons/ai";
 
 const EditUser = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -15,25 +15,14 @@ const EditUser = () => {
     editSubmit,
     setEditSubmit,
     editData,
-    // initialValue,
-    // // isUploaded,
-    // setIsUploaded,
-    // // typeFile,
-    // setTypeFile,
-    // // image,
-    // setImage,
-    // allow,
-    // setAllow,
-    // verified,
-    // setVerified,
+    initialValue,
+    isUploaded,
+    setIsUploaded,
+    // typeFile,
+    setTypeFile,
+    image,
+    setImage,
   } = useContext(UserContext);
-
-  // useEffect(() => {
-  //   if (editPop) {
-  //     $(".editUserPopBg").fadeIn(500);
-  //     $(".editUserPop").slideDown(500);
-  //   }
-  // }, [editPop]);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -44,38 +33,19 @@ const EditUser = () => {
     setUserValues({ ...userValues, [name]: value });
   };
 
-  // const handleAllowChange = (e) => {
-  //   setAllow(!allow);
-  // };
-  // const handleVerifyChange = (e) => {
-  //   setVerified(!verified);
-  // };
+  function handleImageChange(e) {
+    if (e.target.files && e.target.files[0]) {
+      setTypeFile(e.target.files[0].type);
+      let reader = new FileReader();
 
-  // function handleImageChange(e) {
-  //   if (e.target.files && e.target.files[0]) {
-  //     setTypeFile(e.target.files[0].type);
-  //     let reader = new FileReader();
+      reader.onload = function (e) {
+        setImage(e.target.result);
+        setIsUploaded(true);
+      };
 
-  //     reader.onload = function (e) {
-  //       setImage(e.target.result);
-  //       setIsUploaded(true);
-  //     };
-
-  //     reader.readAsDataURL(e.target.files[0]);
-  //   }
-  // }
-
-  // const closePopUp = (e) => {
-  //   // setEditPop(false);
-
-  //   setFormErrors({});
-  //   setEditSubmit(false);
-  //   setUserValues(initialValue);
-  //   setIsUploaded(false);
-  //   setImage("");
-  //   setAllow(false);
-  //   setVerified(false);
-  // };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  }
 
   const validate = (values) => {
     const errors = {};
@@ -129,12 +99,13 @@ const EditUser = () => {
   }, [formErrors]);
   const onCloseModal = () => {
     setOpenModal(false);
+    setUserValues(initialValue);
   };
 
   return (
     <>
       <button
-        className="bg-blue-500 p-1 rounded-lg text-white text-sm mx-2"
+        className="bg-blue-500 p-1 rounded-lg text-white text-sm "
         onClick={() => setOpenModal(true)}
       >
         <RiEdit2Fill />
@@ -149,8 +120,8 @@ const EditUser = () => {
             ></div>
 
             <div className="bg-slate-100 w-7/12  rounded-md shadow-lg  relative  ">
-              <div className="bg-blue-500 col-span-3 mb-4 flex justify-between p-4">
-                <h3 className="text-3xl font-bold text-white  ">Edit User</h3>
+              <div className="bg-blue-500 col-span-3 flex justify-between p-4">
+                <h3 className="text-2xl font-bold text-white  ">Edit User</h3>
                 <button
                   type="button"
                   className="text-2xl font-bold text-white p-2 rounded-md hover:bg-red-700"
@@ -160,11 +131,11 @@ const EditUser = () => {
                 </button>
               </div>
 
-              <div className="p-5 ">
+              <div className="p-4">
                 <div className="flex flex-wrap  gap-4 mb-2 overflow-y-auto h-80 lg:h-full ">
                   <div className="w-full lg:w-[32%] md:w-[45%]">
                     <label
-                      htmlFor="firstName"
+                      htmlFor="firstname"
                       className="text-md font-semibold"
                     >
                       First Name
@@ -176,7 +147,7 @@ const EditUser = () => {
                       name="firstname"
                       className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
-                      value={userValues.firstname}
+                      defaultValue={userValues.firstname}
                     />
                     {formErrors.firstname && (
                       <p className="text-red-500 ">{formErrors.firstname}</p>
@@ -184,7 +155,7 @@ const EditUser = () => {
                   </div>
                   <div className="w-full lg:w-[32%] md:w-[45%]">
                     <label
-                      htmlFor="middleName"
+                      htmlFor="middlename"
                       className="text-md font-semibold"
                     >
                       Middle Name
@@ -195,11 +166,11 @@ const EditUser = () => {
                       name="middlename"
                       className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
-                      value={userValues.middlename}
+                      defaultValue={userValues.middlename}
                     />
                   </div>
                   <div className="w-full lg:w-[32%] md:w-[45%]">
-                    <label htmlFor="lastName" className="text-md font-semibold">
+                    <label htmlFor="lastname" className="text-md font-semibold">
                       Last Name
                       <span className="text-red-500 font-bold">*</span>
                     </label>
@@ -209,7 +180,7 @@ const EditUser = () => {
                       name="lastname"
                       className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
-                      value={userValues.lastname}
+                      defaultValue={userValues.lastname}
                     />
                     {formErrors.email && (
                       <p className="text-red-500 ">{formErrors.lastname}</p>
@@ -227,14 +198,14 @@ const EditUser = () => {
                       name="email"
                       className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
-                      value={userValues.email}
+                      defaultValue={userValues.email}
                     />
                     {formErrors.email && (
                       <p className="text-red-500 ">{formErrors.email}</p>
                     )}
                   </div>
                   <div className="w-full lg:w-[32%] md:w-[45%]">
-                    <label htmlFor="phNum" className="text-md font-semibold">
+                    <label htmlFor="phone" className="text-md font-semibold">
                       Phone Number
                       <span className="text-red-500 font-bold">*</span>
                     </label>
@@ -244,14 +215,14 @@ const EditUser = () => {
                       name="phone"
                       className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
-                      value={userValues.phone}
+                      defaultValue={userValues.phone}
                     />
                     {formErrors.phone && (
                       <p className="text-red-500 ">{formErrors.phone}</p>
                     )}
                   </div>
                   <div className="w-full lg:w-[32%] md:w-[45%]">
-                    <label htmlFor="userName" className="text-md font-semibold">
+                    <label htmlFor="username" className="text-md font-semibold">
                       User Name
                       <span className="text-red-500 font-bold">*</span>
                     </label>
@@ -261,7 +232,7 @@ const EditUser = () => {
                       name="username"
                       className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
-                      value={userValues.username}
+                      defaultValue={userValues.username}
                     />
                     {formErrors.username && (
                       <p className="text-red-500 ">{formErrors.username}</p>
@@ -278,7 +249,7 @@ const EditUser = () => {
                       name="contact"
                       className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
-                      value={userValues.contact}
+                      defaultValue={userValues.contact}
                     />
                   </div>
 
@@ -293,7 +264,7 @@ const EditUser = () => {
                       name="address"
                       className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
-                      value={userValues.address}
+                      defaultValue={userValues.address}
                     />
                     {formErrors.address && (
                       <p className="text-red-500 ">{formErrors.address}</p>
@@ -311,14 +282,17 @@ const EditUser = () => {
                       name="district"
                       className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
-                      value={userValues.district}
+                      defaultValue={userValues.district}
                     />
                     {formErrors.district && (
                       <p className="text-red-500 ">{formErrors.district}</p>
                     )}
                   </div>
                   <div className="w-full lg:w-[32%] md:w-[45%]">
-                    <label htmlFor="houseNum" className="text-md font-semibold">
+                    <label
+                      htmlFor="defHouseNum"
+                      className="text-md font-semibold"
+                    >
                       House Number
                     </label>
                     <input
@@ -327,18 +301,53 @@ const EditUser = () => {
                       name="defHouseNum"
                       className="border border-gray-300 p-2 my-1 rounded w-full"
                       onChange={handleChange}
-                      value={userValues.defHouseNum}
+                      defaultValue={userValues.defHouseNum}
                     />
                   </div>
                 </div>
-                <div>
+                <div className="w-full lg:w-[32%] md:w-[45%]">
                   <span className="text-md font-semibold ">Upload Image:</span>
-                  <input
-                    type="file"
-                    id="uploadImage"
-                    name="UserImage"
-                    className=" p-2 my-1 w-full "
-                  ></input>
+                  <div className="w-full  md:w-44 border-2 border-black   grid place-items-center rounded mt-1">
+                    {!isUploaded ? (
+                      <>
+                        <label
+                          htmlFor="upload-input"
+                          className="text-5xl sm:text-4xl md:text-6xl lg:text-8xl text-blue-500 font-extralight"
+                        >
+                          <AiOutlinePlus />
+                        </label>
+
+                        <input
+                          id="upload-input"
+                          type="file"
+                          accept=".jpg,.jpeg,.gif,.png,.mov,.mp4"
+                          onChange={handleImageChange}
+                          name="image"
+                          className="hidden"
+                        />
+                      </>
+                    ) : (
+                      <div className="relative">
+                        <img
+                          className="absolute top-0 right-0 cursor-pointer"
+                          src={Close}
+                          alt="CloseIcon"
+                          onClick={() => {
+                            setIsUploaded(false);
+                            setImage(null);
+                          }}
+                        />
+
+                        <img
+                          id="uploaded-image"
+                          src={image}
+                          draggable="false"
+                          alt="uploaded-img"
+                          className="w-24 h-24"
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="col-span-3 mt-6 flex justify-end">

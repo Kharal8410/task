@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
@@ -10,7 +10,6 @@ import TableBody from "@mui/material/TableBody";
 import Table from "@mui/material/Table";
 import View from "./View";
 import EditUser from "./Edit";
-import UserContext from "../context/userState/UserContext";
 function TableComponent({
   filterIsVerified,
   filterIsAllow,
@@ -24,7 +23,6 @@ function TableComponent({
   const [statusChange, setStatusChange] = useState(null);
   const [allowAppChange, setAllowAppChange] = useState(null);
   const itemsPerPage = 10;
-  // const { setEditPop, editPop } = useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {

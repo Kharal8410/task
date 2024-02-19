@@ -47,7 +47,7 @@ const View = ({ user }) => {
   return (
     <>
       <button
-        className="bg-blue-500 p-1 rounded-lg text-white text-sm mx-2"
+        className="bg-blue-500 p-1 rounded-lg text-white text-sm "
         onClick={() => setOpenModal(true)}
       >
         <FaEye />

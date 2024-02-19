@@ -147,13 +147,13 @@ function Dashboard() {
   };
 
   return (
-    <div className="container w-11/12 mx-auto p-2 sm:p-4 md:p-6 lg:p-8">
+    <div className="container w-[95%] mx-auto p-2 sm:p-4 md:p-6 lg:p-8 ">
       <Toaster />
       <div className="flex flex-row justify-between">
         <PopupComponent />
         <button
           onClick={logoutHandler}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded "
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded "
         >
           Logout
         </button>

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import UserContext from "./UserContext";
-import $ from "jquery";
-import Fetchdata from "./../../components/hooks/getData";
+import { Fetchdata } from "../../components/hooks/getData";
 
-function UserState(props) {
-  const appURL = "https://testing.esnep.com/happyhomes/api/";
+function UserState(props, { user }) {
   const initialValue = {
     firstname: "",
     middlename: "",
@@ -26,59 +24,55 @@ function UserState(props) {
   const [submit, setSubmit] = useState(false);
   const [editSubmit, setEditSubmit] = useState(false);
   const [loading, setLoading] = useState(true);
-
   const [isUploaded, setIsUploaded] = useState(false);
   const [typeFile, setTypeFile] = useState("");
   const [image, setImage] = useState("");
-
   const [allow, setAllow] = useState(false);
   const [verified, setVerified] = useState(false);
-
   const [originalList, setOriginalList] = useState(null);
-
   const [userList, setUserList] = useState([]);
 
-  // useEffect(() => {
-  //   userLst();
-  // }, []);
+  useEffect(() => {
+    userLst();
+  }, []);
 
-  // const userLst = () => {
-  //   const params = {
-  //     UserID: "-1",
-  //     Flag: "S",
-  //     IsAllow: "-1",
-  //     IsVerified: "-1",
-  //     UserType: "O",
-  //     AuthCode: "r1d3r",
-  //     FetchURL: `${appURL}admin/user`,
-  //     Type: "POST",
-  //   };
+  const userLst = () => {
+    const params = {
+      UserID: "-1",
+      Flag: "S",
+      IsAllow: "-1",
+      IsVerified: "-1",
+      UserType: "O",
+      AuthCode: "r1d3r",
+      FetchURL: `https://testing.esnep.com/happyhomes/api/admin/user`,
+      Type: "POST",
+    };
 
-  //   Fetchdata(params).then(function (resp) {
-  //     if (resp.StatusCode === 200) {
-  //       const postResult = resp.Values ? resp.Values : "";
-  //       setUserList(postResult);
-  //       setOriginalList(postResult);
-  //       setLoading(false);
-  //     } else {
-  //       setUserList([]);
-  //       setOriginalList([]);
-  //       setLoading(false);
-  //     }
-  //   });
-  // };
+    Fetchdata(params).then(function (resp) {
+      if (resp.StatusCode === 200) {
+        const postResult = resp.Values ? resp.Values : "";
+        setUserList(postResult);
+        setOriginalList(postResult);
+        setLoading(false);
+      } else {
+        setUserList([]);
+        setOriginalList([]);
+        setLoading(false);
+      }
+    });
+  };
 
   // to edit and view Todo
 
   const [perID, setPerId] = useState("");
-  const [editPop, setEditPop] = useState(false);
   const [viewPop, setViewPop] = useState(false);
   const [viewList, setViewList] = useState(false);
+
   const handleEdit = (data) => {
     setPerId(data.MemID);
     info();
-    setEditPop(true);
   };
+
   const handleView = (data) => {
     setPerId(data.MemID);
     setViewPop(true);
@@ -94,7 +88,7 @@ function UserState(props) {
       Flag: "SI",
       MemID: perID.toString(),
       AuthCode: "r1d3r",
-      FetchURL: `${appURL}admin/user`,
+      FetchURL: `https://testing.esnep.com/happyhomes/api/admin/user`,
       Type: "POST",
     };
 
@@ -133,7 +127,7 @@ function UserState(props) {
       LastName: userValues.lastname,
       UserType: "O",
       Password: userValues.password,
-      UserImage: image !== null ? image.split(",")[1] : "",
+      // UserImage: image !== null ? image.split(",")[1] : "",
       Email: userValues.email,
       Contact: userValues.contact,
       PhnNum: userValues.phone,
@@ -146,21 +140,19 @@ function UserState(props) {
       FiscalID: "1",
       MemID: perID.toString(),
       AuthCode: "r1d3r",
-      FetchURL: `${appURL}admin/user`,
+      FetchURL: `https://testing.esnep.com/happyhomes/api/admin/user`,
       Type: "POST",
     };
     Fetchdata(dataForm).then(function (resp) {
       if (resp.StatusCode === 200) {
-        setEditPop(false);
         setUserValues(initialValue);
         setAllow(false);
         setVerified(false);
         setIsUploaded(false);
         setImage("");
-        // userLst();
+        userLst();
         info();
-        $(".editUserPopBg").fadeOut(500);
-        $(".editUserPop").slideUp(500);
+
         toast.success(resp.Message, {
           style: {
             color: "green",
@@ -194,7 +186,7 @@ function UserState(props) {
         setUserList,
         loading,
         setLoading,
-        // userLst,
+        userLst,
         editSubmit,
         setEditSubmit,
         originalList,
@@ -202,8 +194,7 @@ function UserState(props) {
         handleView,
         perID,
         setPerId,
-        editPop,
-        setEditPop,
+
         viewPop,
         setViewPop,
         viewList,
