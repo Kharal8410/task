@@ -58,15 +58,34 @@ function PopupComponent() {
     e.preventDefault();
     if (imageSrc) {
       const base64Data = imageSrc.split(",")[1];
-
       const updatedFormData = {
         ...formData,
         UserImage: base64Data,
       };
-
       await postData(updatedFormData);
     } else {
-      await postData(formData);
+      let districtValue = "";
+      switch (formData.District) {
+        case "Kathmandu":
+          districtValue = "1";
+          break;
+        case "Chitwan":
+          districtValue = "2";
+          break;
+        case "Nawalpur":
+          districtValue = "3";
+          break;
+        default:
+          districtValue = "";
+          break;
+      }
+
+      const updatedFormData = {
+        ...formData,
+        District: districtValue,
+      };
+
+      await postData(updatedFormData);
     }
   };
 
@@ -294,17 +313,20 @@ function PopupComponent() {
                       District
                       <span className="text-red-500 font-bold">*</span>
                     </label>
-                    <input
-                      type="text"
+                    <select
                       id="district"
-                      placeholder="district"
                       className="border border-gray-300 p-2 my-1 rounded w-full"
                       value={formData.District}
                       onChange={(e) =>
                         setFormData({ ...formData, District: e.target.value })
                       }
                       required
-                    />
+                    >
+                      <option value="">Select District</option>
+                      <option value="Kathmandu">Kathmandu</option>
+                      <option value="Chitwan">Chitwan</option>
+                      <option value="Nawalpur">Nawalpur</option>
+                    </select>
                   </div>
                   <div className="w-full lg:w-[32%] md:w-[45%]">
                     <label htmlFor="houseNum" className="text-md font-semibold">

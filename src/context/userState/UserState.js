@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import UserContext from "./UserContext";
 import { Fetchdata } from "../../components/hooks/getData";
 
-function UserState(props, { user }) {
+function UserState(props) {
   const initialValue = {
     firstname: "",
     middlename: "",
@@ -68,8 +68,8 @@ function UserState(props, { user }) {
   const [viewPop, setViewPop] = useState(false);
   const [viewList, setViewList] = useState(false);
 
-  const handleEdit = (data) => {
-    setPerId(data.MemID);
+  const handleEdit = (user) => {
+    setPerId(user.MemID);
     info();
   };
 
@@ -118,8 +118,9 @@ function UserState(props, { user }) {
   };
 
   const editData = () => {
+    const userinfo = JSON.parse(localStorage.getItem("userInfo"));
     const dataForm = {
-      UserID: "-1",
+      UserID: userinfo.UserID.toString(),
       Flag: "U",
       UserName: userValues.username,
       FirstName: userValues.firstname,
@@ -127,7 +128,7 @@ function UserState(props, { user }) {
       LastName: userValues.lastname,
       UserType: "O",
       Password: userValues.password,
-      // UserImage: image !== null ? image.split(",")[1] : "",
+      UserImage: image !== null ? image.split(",")[1] : "",
       Email: userValues.email,
       Contact: userValues.contact,
       PhnNum: userValues.phone,
@@ -194,7 +195,6 @@ function UserState(props, { user }) {
         handleView,
         perID,
         setPerId,
-
         viewPop,
         setViewPop,
         viewList,

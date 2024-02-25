@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import Pagination from "@mui/material/Pagination";
+import { useState, useEffect, useContext } from "react";
+import ReactPaginate from "react-paginate";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import TableCell from "@mui/material/TableCell";
@@ -10,6 +10,8 @@ import TableBody from "@mui/material/TableBody";
 import Table from "@mui/material/Table";
 import View from "./View";
 import EditUser from "./Edit";
+import UserContext from "../context/userState/UserContext";
+
 function TableComponent({
   filterIsVerified,
   filterIsAllow,
@@ -23,6 +25,8 @@ function TableComponent({
   const [statusChange, setStatusChange] = useState(null);
   const [allowAppChange, setAllowAppChange] = useState(null);
   const itemsPerPage = 10;
+
+  const { handleEdit } = useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,8 +66,8 @@ function TableComponent({
     fetchData();
   }, [userVerificationChange, statusChange, allowAppChange]);
 
-  const handlePageChange = (e, value) => {
-    setCurrentPage(value);
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected + 1);
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -159,7 +163,15 @@ function TableComponent({
                         </button>
                       </TableCell>
                       <TableCell>
-                        <EditUser />
+                        <span
+                          className="mx-1  "
+                          onClick={() => {
+                            handleEdit(user);
+                          }}
+                        >
+                          <EditUser />
+                        </span>
+
                         <View user={user} />
                       </TableCell>
                     </TableRow>
@@ -171,18 +183,21 @@ function TableComponent({
           </TableBody>
         </Table>
       </TableContainer>
-      <Stack
-        spacing={4}
-        className="grid place-items-center mt-4 sm:mx-4 md:mx-8 lg:mx-16 xl:mx-24 "
-      >
-        <Pagination
-          count={Math.ceil((responseData?.Values.length || 0) / itemsPerPage)}
-          page={currentPage}
-          onChange={handlePageChange}
-          showFirstButton
-          showLastButton
-          // variant="outlined"
-          // shape="rounded"
+
+      <Stack className="grid place-items-end">
+        <ReactPaginate
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
+          breakLabel={"..."}
+          pageCount={Math.ceil(
+            (responseData?.Values.length || 0) / itemsPerPage
+          )}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageChange}
+          containerClassName={"pagination"}
+          activeClassName={"font-semibold "}
+          className="flex flex-row gap-4"
         />
       </Stack>
     </>

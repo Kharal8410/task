@@ -135,6 +135,10 @@ const View = ({ user }) => {
                         </span>
                         <h3>{userInfo.UserName}</h3>
                       </div>
+                      <div className="w-full lg:w-[32%] md:w-[45%]">
+                        <span className="text-md font-semibold">District:</span>
+                        <h3>{userInfo.District}</h3>
+                      </div>
 
                       <div className="w-full lg:w-[32%] md:w-[45%] relative">
                         <span className="text-md font-semibold">Contact:</span>

@@ -23,12 +23,24 @@ const EditUser = () => {
     image,
     setImage,
   } = useContext(UserContext);
+  const districtNames = {
+    1: "Kathmandu",
+    2: "Chitwan",
+    3: "Nawalpur",
+  };
 
   const handleChange = (e) => {
     e.preventDefault();
     const target = e.target;
     const name = target.name;
-    const value = target.type === "checkbox" ? target.checked : target.value;
+    let value = target.type === "checkbox" ? target.checked : target.value;
+
+    if (name === "district") {
+      const districtKey = Object.keys(districtNames).find(
+        (key) => districtNames[key] === value
+      );
+      value = districtKey ? districtKey : value;
+    }
 
     setUserValues({ ...userValues, [name]: value });
   };
@@ -89,6 +101,7 @@ const EditUser = () => {
     e.preventDefault();
     setFormErrors(validate(userValues));
     setEditSubmit(true);
+    //  setOpenModal(false);
   };
 
   useEffect(() => {
@@ -96,7 +109,8 @@ const EditUser = () => {
       editData(userValues);
       setEditSubmit(false);
     }
-  }, [formErrors]);
+  }, [formErrors, editData, editSubmit, setEditSubmit, userValues]);
+
   const onCloseModal = () => {
     setOpenModal(false);
     setUserValues(initialValue);
@@ -105,7 +119,7 @@ const EditUser = () => {
   return (
     <>
       <button
-        className="bg-blue-500 p-1 rounded-lg text-white text-sm "
+        className="bg-blue-500 p-1 rounded-lg text-white text-sm"
         onClick={() => setOpenModal(true)}
       >
         <RiEdit2Fill />
@@ -131,7 +145,7 @@ const EditUser = () => {
                 </button>
               </div>
 
-              <div className="p-4">
+              <div className="p-4 ">
                 <div className="flex flex-wrap  gap-4 mb-2 overflow-y-auto h-80 lg:h-full ">
                   <div className="w-full lg:w-[32%] md:w-[45%]">
                     <label
@@ -276,14 +290,18 @@ const EditUser = () => {
                       District
                       <span className="text-red-500 font-bold">*</span>
                     </label>
-                    <input
+                    <select
                       id="district"
-                      type="text"
-                      name="district"
                       className="border border-gray-300 p-2 my-1 rounded w-full"
-                      onChange={handleChange}
                       defaultValue={userValues.district}
-                    />
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">Select District</option>
+                      <option value="Kathmandu">Kathmandu</option>
+                      <option value="Chitwan">Chitwan</option>
+                      <option value="Nawalpur">Nawalpur</option>
+                    </select>
                     {formErrors.district && (
                       <p className="text-red-500 ">{formErrors.district}</p>
                     )}
